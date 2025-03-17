@@ -1,0 +1,7 @@
+Starting visualization test with 30 epochs, 8 steps per epoch
+Updates will be sent every 0.2 seconds
+Press Ctrl+C to stop the test
+Saved metric to ./metric_data_current.csv
+Saved Christoffel symbols to ./christoffel_data_current.csv
+Saved metadata to ./metric_metadata.json
+Error during test: Image.__init__() got an unexpected keyword argument 'data'

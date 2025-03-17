@@ -1,0 +1,15 @@
+2025-03-17 14:06:12,331 - path_analysis - INFO - Initialized W&B monitoring: manifold-deep-learning/manifold-learning-20250317-140611
+2025-03-17 14:06:12,525 - path_analysis - INFO - Dataset visualization saved to ./results/visualizations/dataset.png
+Terminating simulation process...
+Traceback (most recent call last):
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/run_wandb_monitor.py", line 217, in <module>
+    main()
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/run_wandb_monitor.py", line 207, in main
+    run_deep_learning_model(args)
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/run_wandb_monitor.py", line 173, in run_deep_learning_model
+    model, ricci_flow = train_model_with_visualization(config)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/path_analysis.py", line 1147, in train_model_with_visualization
+    optimizer = CovariantDescent(
+                ^^^^^^^^^^^^^^^^^
+TypeError: CovariantDescent.__init__() got an unexpected keyword argument 'device'

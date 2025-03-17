@@ -14,6 +14,12 @@ from matplotlib.animation import FuncAnimation
 import logging
 import math
 import os
+import threading
+import socket
+import pickle
+import json
+import wandb  # Add Weights & Biases import
+import time
 
 # Set up logging
 logging.basicConfig(
@@ -25,6 +31,53 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+# Add this utility function near the top of the file after imports
+def setup_wandb_monitoring(config=None, project_name="manifold-deep-learning", run_name=None, tags=None, model=None):
+    """
+    Set up Weights & Biases monitoring.
+    
+    Args:
+        config: Dictionary of configuration parameters to log
+        project_name: W&B project name
+        run_name: Name for this particular run
+        tags: List of tags for the run
+        model: If provided, wandb will watch this model for gradients and parameters
+        
+    Returns:
+        The initialized wandb run object
+    """
+    if wandb.run is None:
+        run = wandb.init(
+            project=project_name,
+            name=run_name,
+            config=config,
+            tags=tags
+        )
+        
+        if model is not None:
+            wandb.watch(model, log="all", log_freq=10)
+            
+        logger.info(f"Initialized W&B monitoring: {project_name}/{run_name}")
+        return run
+    else:
+        logger.info("W&B run already active, reusing existing run")
+        return wandb.run
+
+# Add this method to log metrics to W&B
+def log_metrics_to_wandb(metrics, step=None, prefix=""):
+    """
+    Log metrics to Weights & Biases.
+    
+    Args:
+        metrics: Dictionary of metrics to log
+        step: Optional step number for logging
+        prefix: Optional prefix to add to metric names
+    """
+    if wandb.run is not None:
+        if prefix:
+            metrics = {f"{prefix}/{k}": v for k, v in metrics.items()}
+        wandb.log(metrics, step=step)
 
 class ManifoldEmbedding(nn.Module):
     def __init__(self, input_dim, embedding_dim, device=None):
@@ -526,7 +579,7 @@ class CovariantDescent(Optimizer):
     
 class RicciFlow:
     def __init__(self, model, optimizer, criterion, num_iterations=10, lr=0.01, epsilon=1e-5, 
-                 device=None, checkpoint_dir='./checkpoints', is_spacetime=True):
+                 device=None, checkpoint_dir='./checkpoints', is_spacetime=True, use_wandb=True):
         self.device = device if device is not None else torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.model = model.to(self.device)
         self.optimizer = optimizer
@@ -536,6 +589,7 @@ class RicciFlow:
         self.epsilon = epsilon  # Small value for finite difference
         self.checkpoint_dir = checkpoint_dir
         self.is_spacetime = is_spacetime  # Flag to indicate if we're learning a spacetime metric
+        self.use_wandb = use_wandb  # Flag to enable/disable W&B logging
         
         # Create checkpoint directory if it doesn't exist
         os.makedirs(checkpoint_dir, exist_ok=True)
@@ -546,6 +600,30 @@ class RicciFlow:
             'scalar_curvature': [],
             'metric_determinant': []
         }
+        
+        # Initialize Weights & Biases if enabled
+        if self.use_wandb and wandb.run is None:
+            wandb.init(
+                project="manifold-deep-learning",
+                config={
+                    "model_type": type(model).__name__,
+                    "optimizer_type": type(optimizer).__name__,
+                    "criterion_type": type(criterion).__name__,
+                    "num_iterations": num_iterations,
+                    "learning_rate": lr,
+                    "epsilon": epsilon,
+                    "is_spacetime": is_spacetime,
+                    "device": str(self.device)
+                },
+                name="ricci-flow-training",
+                tags=["ricci-flow", "geodesic-learning", "manifold-embedding"]
+            )
+            
+            # Log model architecture as a string
+            wandb.run.summary["model_architecture"] = str(model)
+            
+            # Watch model gradients and parameters
+            wandb.watch(model, log="all", log_freq=10)
         
         logger.info(f"Initialized RicciFlow with {num_iterations} iterations, lr={lr}, device={self.device}, is_spacetime={is_spacetime}")
 
@@ -559,6 +637,17 @@ class RicciFlow:
             'optimizer_state_dict': self.optimizer.state_dict(),
             'metrics_history': self.metrics_history
         }, checkpoint_path)
+        
+        # Log checkpoint to W&B
+        if self.use_wandb:
+            artifact = wandb.Artifact(
+                name=f"model-checkpoint-{epoch}-{global_step}", 
+                type="model",
+                description=f"Model checkpoint at epoch {epoch}, step {global_step}"
+            )
+            artifact.add_file(checkpoint_path)
+            wandb.log_artifact(artifact)
+            
         logger.info(f"Checkpoint saved to {checkpoint_path}")
 
     def load_checkpoint(self, checkpoint_path):
@@ -571,6 +660,12 @@ class RicciFlow:
         self.model.load_state_dict(checkpoint['model_state_dict'])
         self.optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
         self.metrics_history = checkpoint['metrics_history']
+        
+        # Log checkpoint loading to W&B
+        if self.use_wandb:
+            wandb.run.summary["loaded_checkpoint"] = checkpoint_path
+            wandb.run.summary["loaded_epoch"] = checkpoint['epoch']
+            wandb.run.summary["loaded_step"] = checkpoint['global_step']
         
         logger.info(f"Loaded checkpoint from {checkpoint_path}, " 
                    f"epoch: {checkpoint['epoch']}, step: {checkpoint['global_step']}")
@@ -595,26 +690,77 @@ class RicciFlow:
                 logger.info(f"Step {global_step} - Scalar curvature: {scalar_curvature:.6f}, "
                            f"Metric determinant: {metric_det:.6f}")
         
-        # Perform optimization steps
-        total_loss = 0
-        for _ in range(self.num_iterations):
-            self.optimizer.zero_grad()
-            outputs = self.model(inputs)
-            metric = self.model.embedding.get_metric()
-            ricci_curvature = RicciCurvature(metric, device=self.device)
-            loss = self.criterion(outputs, labels, ricci_curvature.christoffel_symbols)
-            loss.backward()
-            self.optimizer.step()
-            
-            total_loss += loss.item()
-            
-            # Update metric tensor using Ricci flow
-            self.update_metric(inputs, labels)
+        # Forward pass
+        outputs = self.model(inputs)
         
-        avg_loss = total_loss / self.num_iterations
-        self.metrics_history['loss'].append(avg_loss)
+        # Compute loss
+        if self.is_spacetime:
+            # For spacetime metrics, we may need to calculate christoffel symbols
+            christoffel = self.model.embedding.christoffel_symbols(metric, None)
+            loss = self.criterion(outputs, labels, christoffel)
+        else:
+            # Standard loss calculation
+            loss = self.criterion(outputs, labels)
         
-        return avg_loss
+        # Store loss
+        self.metrics_history['loss'].append(loss.item())
+        
+        # Log metrics to W&B
+        if self.use_wandb:
+            # Basic metrics
+            wandb_log_data = {
+                'loss': loss.item(),
+                'scalar_curvature': scalar_curvature,
+                'metric_determinant': metric_det,
+                'global_step': global_step
+            }
+            
+            # Log eigenvalues of the metric
+            eigenvalues = torch.linalg.eigvalsh(metric)
+            wandb_log_data['min_eigenvalue'] = torch.min(eigenvalues).item()
+            wandb_log_data['max_eigenvalue'] = torch.max(eigenvalues).item()
+            
+            # Log the metric tensor components
+            for i in range(metric.shape[0]):
+                for j in range(metric.shape[1]):
+                    wandb_log_data[f'metric_{i}_{j}'] = metric[i, j].item()
+            
+            # Log Ricci tensor components if available
+            try:
+                ricci_tensor = ricci_curvature.compute_ricci_tensor()
+                wandb_log_data['ricci_tensor_norm'] = torch.norm(ricci_tensor).item()
+                
+                # Create a heatmap visualization of the metric and Ricci tensor
+                if global_step % 20 == 0:  # Less frequent to reduce overhead
+                    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+                    
+                    # Metric tensor heatmap
+                    im1 = ax1.imshow(metric.cpu().numpy(), cmap='viridis')
+                    ax1.set_title('Metric Tensor')
+                    plt.colorbar(im1, ax=ax1)
+                    
+                    # Ricci tensor heatmap
+                    im2 = ax2.imshow(ricci_tensor.cpu().numpy(), cmap='plasma')
+                    ax2.set_title('Ricci Tensor')
+                    plt.colorbar(im2, ax=ax2)
+                    
+                    plt.tight_layout()
+                    wandb_log_data['tensor_visualization'] = wandb.Image(
+                        plt, caption=f"Metric and Ricci Tensor at step {global_step}"
+                    )
+                    plt.close(fig)
+            except Exception as e:
+                logger.warning(f"Could not compute Ricci tensor for visualization: {e}")
+            
+            # Log to W&B
+            wandb.log(wandb_log_data)
+        
+        # Backward pass and optimization
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+        
+        return loss.item()
 
     def update_metric(self, inputs, labels):
         """Update the metric tensor using the Ricci flow equation"""
@@ -680,43 +826,20 @@ class RicciFlow:
                 signature = "".join(["-" if e < 0 else "+" for e in eigenvalues_new])
                 logger.debug(f"Metric signature after update: {signature}")
 
-    def visualize_metric_evolution(self, save_path=None):
-        """Visualize the evolution of the metric during training"""
-        if not self.metrics_history['scalar_curvature']:
-            logger.warning("No metrics history available for visualization")
-            return
-            
-        steps = range(len(self.metrics_history['scalar_curvature']))
-        
-        plt.figure(figsize=(12, 5))
-        
-        plt.subplot(1, 2, 1)
-        plt.plot(steps, self.metrics_history['scalar_curvature'])
-        plt.title('Scalar Curvature Evolution')
-        plt.xlabel('Step')
-        plt.ylabel('Scalar Curvature')
-        
-        plt.subplot(1, 2, 2)
-        plt.plot(steps, self.metrics_history['metric_determinant'])
-        plt.title('Metric Determinant Evolution')
-        plt.xlabel('Step')
-        plt.ylabel('Determinant')
-        
-        plt.tight_layout()
-        
-        if save_path:
-            plt.savefig(save_path)
-            logger.info(f"Visualization saved to {save_path}")
-        else:
-            plt.show()
-            
-        plt.close()
-        
-    def save_metrics_csv(self, save_path):
-        """Save metrics history to CSV file"""
-        metrics_df = pd.DataFrame(self.metrics_history)
-        metrics_df.to_csv(save_path, index_label='step')
-        logger.info(f"Metrics saved to {save_path}")
+        # If the method has a `finish` or `close` function, add:
+        def finish(self):
+            """Clean up resources and finish logging"""
+            if self.use_wandb and wandb.run is not None:
+                # Log final metrics
+                wandb.run.summary["final_loss"] = self.metrics_history['loss'][-1] if self.metrics_history['loss'] else None
+                wandb.run.summary["final_scalar_curvature"] = self.metrics_history['scalar_curvature'][-1] if self.metrics_history['scalar_curvature'] else None
+                wandb.run.summary["final_metric_determinant"] = self.metrics_history['metric_determinant'][-1] if self.metrics_history['metric_determinant'] else None
+                wandb.run.summary["total_steps"] = len(self.metrics_history['loss'])
+                
+                # Finish the W&B run
+                wandb.finish()
+                
+            logger.info("RicciFlow training finished")
 
 class Model(nn.Module):
     def __init__(self, input_dim, embedding_dim, device=None):
@@ -942,9 +1065,9 @@ def visualize_geodesics(model, dataset, num_geodesics=5, num_steps=20, save_path
         
     plt.close()
 
-def train_model(config=None):
+def train_model_with_visualization(config=None):
     """
-    Train the manifold learning model
+    Train the manifold learning model with real-time visualization
     
     Parameters:
     -----------
@@ -964,7 +1087,10 @@ def train_model(config=None):
         'save_dir': './results',
         'device': None,
         'checkpoint_interval': 5,
-        'visualization_interval': 10
+        'visualization_interval': 10,
+        'use_wandb': True,  # Whether to use Weights & Biases for monitoring
+        'wandb_project': 'manifold-deep-learning',  # W&B project name
+        'wandb_run_name': None  # Will be auto-generated if None
     }
     
     # Update with provided config
@@ -981,6 +1107,16 @@ def train_model(config=None):
     os.makedirs(f"{config['save_dir']}/checkpoints", exist_ok=True)
     os.makedirs(f"{config['save_dir']}/visualizations", exist_ok=True)
     
+    # Initialize W&B if enabled
+    if config['use_wandb']:
+        run_name = config['wandb_run_name'] or f"{config['data_type']}-{config['embedding_dim']}d-{time.strftime('%Y%m%d-%H%M%S')}"
+        setup_wandb_monitoring(
+            config=config,
+            project_name=config['wandb_project'],
+            run_name=run_name,
+            tags=[config['data_type'], f"dim-{config['embedding_dim']}", "manifold-learning"]
+        )
+    
     # Create dataset and dataloader
     dataset = ManifoldDataset(
         num_samples=config['num_samples'], 
@@ -990,7 +1126,12 @@ def train_model(config=None):
     )
     
     # Visualize the dataset
-    dataset.visualize_data(save_path=f"{config['save_dir']}/visualizations/dataset.png")
+    dataset_viz_path = f"{config['save_dir']}/visualizations/dataset.png"
+    dataset.visualize_data(save_path=dataset_viz_path)
+    
+    # Log dataset visualization to W&B
+    if config['use_wandb'] and wandb.run is not None:
+        wandb.log({"dataset_visualization": wandb.Image(dataset_viz_path)})
     
     dataloader = DataLoader(
         dataset, 
@@ -1006,11 +1147,14 @@ def train_model(config=None):
     optimizer = CovariantDescent(
         model.parameters(), 
         lr=config['learning_rate'],
-        weight_decay=config['weight_decay'],
-        curvature_func=lambda p: 0.01 * torch.eye(p.shape[0] if len(p.shape) > 0 else 1, device=device)
+        weight_decay=config['weight_decay']
     )
     
-    criterion = GeodesicLoss()
+    # Create a scheduler for learning rate decay
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.9)
+
+    # Define your loss function
+    criterion = GeodesicLoss(num_steps=10)
     
     # Create Ricci flow optimizer
     ricci_flow = RicciFlow(
@@ -1021,8 +1165,15 @@ def train_model(config=None):
         device=device
     )
     
+    # Initialize communication channel
+    visualization_comm = VisualizationCommunicator(method='file')
+    
+    # Calculate total steps for progress tracking
+    total_steps = len(dataloader) * config['num_epochs']
+    
     # Training loop
     global_step = 0
+    running_loss = 0.0
     for epoch in range(config['num_epochs']):
         total_loss = 0
         model.train()
@@ -1032,20 +1183,87 @@ def train_model(config=None):
             inputs = inputs.to(device)
             labels = labels.to(device)
             
-            # Perform Ricci flow step
-            loss = ricci_flow.flow_step(inputs, labels, global_step)
-            total_loss += loss
+            # Forward pass and optimization step
+            outputs = model(inputs)
+            loss = criterion(outputs, labels)
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
             
-            global_step += 1
+            # Update running loss
+            running_loss = 0.9 * running_loss + 0.1 * loss.item() if global_step > 0 else loss.item()
             
-            # Log progress
-            if batch_idx % 10 == 0:
-                logger.info(f"Epoch {epoch+1}/{config['num_epochs']}, Batch {batch_idx}/{len(dataloader)}, "
-                           f"Loss: {loss:.6f}")
+            # Every N steps, send updated metric data to visualization
+            if global_step % config['visualization_interval'] == 0:
+                # Get current metric tensor and related data
+                metric = model.embedding.get_metric().detach().cpu().numpy()
+                
+                # Calculate Christoffel symbols and Riemann tensor
+                ricci_curvature = RicciCurvature(model.embedding.get_metric(), device=device)
+                christoffel = ricci_curvature.christoffel_symbols.detach().cpu().numpy()
+                
+                # Send to visualization with enhanced metadata
+                visualization_comm.send_update({
+                    'metric': metric,
+                    'christoffel': christoffel,
+                    'step': global_step,
+                    'total_steps': total_steps,
+                    'epoch': epoch,
+                    'total_epochs': config['num_epochs'],
+                    'loss': running_loss,
+                    'is_training': True
+                })
+                
+                # Log metrics to W&B
+                if config['use_wandb'] and wandb.run is not None:
+                    # Calculate scalar curvature
+                    scalar_curvature = ricci_curvature.compute_scalar_curvature().item()
+                    
+                    # Create a heatmap visualization of the metric tensor for W&B
+                    fig, ax = plt.subplots(figsize=(8, 6))
+                    im = ax.imshow(metric, cmap='viridis')
+                    ax.set_title(f'Metric Tensor (Epoch {epoch+1}, Step {global_step})')
+                    plt.colorbar(im)
+                    plt.tight_layout()
+                    
+                    # Log metrics and visualizations
+                    log_metrics_to_wandb({
+                        'training/loss': running_loss,
+                        'training/scalar_curvature': scalar_curvature,
+                        'training/metric_determinant': np.linalg.det(metric),
+                        'training/metric_heatmap': wandb.Image(fig),
+                        'training/epoch': epoch + 1,
+                        'training/step': global_step,
+                    })
+                    
+                    plt.close(fig)
+                
+                global_step += 1
+                
+                total_loss += loss.item()
+                
+                # Log progress
+                if batch_idx % 10 == 0:
+                    logger.info(f"Epoch {epoch+1}/{config['num_epochs']}, Batch {batch_idx}/{len(dataloader)}, "
+                               f"Loss: {loss:.6f}")
+                    
+                    # Log batch metrics to W&B
+                    if config['use_wandb'] and wandb.run is not None:
+                        log_metrics_to_wandb({
+                            'batch/loss': loss.item(),
+                            'batch/step': global_step,
+                        })
         
         # Compute average loss for the epoch
         avg_loss = total_loss / len(dataloader)
         logger.info(f"Epoch {epoch+1} completed, Average Loss: {avg_loss:.6f}")
+        
+        # Log epoch metrics to W&B
+        if config['use_wandb'] and wandb.run is not None:
+            log_metrics_to_wandb({
+                'epoch/loss': avg_loss,
+                'epoch/epoch_num': epoch + 1,
+            })
         
         # Save checkpoint
         if (epoch + 1) % config['checkpoint_interval'] == 0:
@@ -1053,28 +1271,144 @@ def train_model(config=None):
         
         # Visualize metric evolution
         if (epoch + 1) % config['visualization_interval'] == 0:
-            ricci_flow.visualize_metric_evolution(
-                save_path=f"{config['save_dir']}/visualizations/metric_evolution_epoch_{epoch+1}.png"
-            )
+            # Save metric evolution visualization
+            metric_evolution_path = f"{config['save_dir']}/visualizations/metric_evolution_epoch_{epoch+1}.png"
+            ricci_flow.visualize_metric_evolution(save_path=metric_evolution_path)
             
             # Visualize geodesics
+            geodesics_path = f"{config['save_dir']}/visualizations/geodesics_epoch_{epoch+1}.png"
             visualize_geodesics(
                 model, 
                 dataset, 
-                save_path=f"{config['save_dir']}/visualizations/geodesics_epoch_{epoch+1}.png"
+                save_path=geodesics_path
             )
+            
+            # Log visualizations to W&B
+            if config['use_wandb'] and wandb.run is not None:
+                log_metrics_to_wandb({
+                    'visualizations/metric_evolution': wandb.Image(metric_evolution_path),
+                    'visualizations/geodesics': wandb.Image(geodesics_path),
+                    'epoch': epoch + 1,
+                })
+    
+    # Send final update with is_training=False
+    metric = model.embedding.get_metric().detach().cpu().numpy()
+    ricci_curvature = RicciCurvature(model.embedding.get_metric(), device=device)
+    christoffel = ricci_curvature.christoffel_symbols.detach().cpu().numpy()
+    
+    visualization_comm.send_update({
+        'metric': metric,
+        'christoffel': christoffel,
+        'step': global_step,
+        'total_steps': total_steps,
+        'epoch': config['num_epochs'],
+        'total_epochs': config['num_epochs'],
+        'loss': running_loss,
+        'is_training': False
+    })
     
     # Save final model and metrics
     ricci_flow.save_checkpoint(config['num_epochs'], global_step)
     ricci_flow.save_metrics_csv(f"{config['save_dir']}/metrics.csv")
-    ricci_flow.visualize_metric_evolution(f"{config['save_dir']}/visualizations/final_metric_evolution.png")
     
-    # Visualize final geodesics
-    visualize_geodesics(model, dataset, save_path=f"{config['save_dir']}/visualizations/final_geodesics.png")
+    # Save final visualizations
+    final_metric_path = f"{config['save_dir']}/visualizations/final_metric_evolution.png"
+    final_geodesics_path = f"{config['save_dir']}/visualizations/final_geodesics.png"
+    
+    ricci_flow.visualize_metric_evolution(final_metric_path)
+    visualize_geodesics(model, dataset, save_path=final_geodesics_path)
+    
+    # Log final metrics and visualizations to W&B
+    if config['use_wandb'] and wandb.run is not None:
+        # Get scalar curvature and other final metrics
+        final_scalar_curvature = ricci_curvature.compute_scalar_curvature().item()
+        final_metric_det = np.linalg.det(metric)
+        
+        # Log to W&B summary (these appear at the top of the run page)
+        wandb.run.summary.update({
+            "final_loss": running_loss,
+            "final_scalar_curvature": final_scalar_curvature,
+            "final_metric_determinant": final_metric_det,
+            "total_epochs": config['num_epochs'],
+            "total_steps": global_step,
+        })
+        
+        # Log final visualizations
+        log_metrics_to_wandb({
+            'final/metric_evolution': wandb.Image(final_metric_path),
+            'final/geodesics': wandb.Image(final_geodesics_path),
+            'final/loss': running_loss,
+            'final/scalar_curvature': final_scalar_curvature,
+            'final/metric_determinant': final_metric_det,
+        })
+        
+        # Finish the W&B run
+        wandb.finish()
     
     logger.info(f"Training completed. Results saved to {config['save_dir']}")
     
     return model, ricci_flow
+
+class VisualizationCommunicator:
+    def __init__(self, method='file', port=5555):
+        self.method = method
+        if method == 'socket':
+            import socket
+            self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.socket.bind(('localhost', port))
+            self.socket.listen(1)
+            print(f"Waiting for visualization to connect on port {port}...")
+            self.conn, _ = self.socket.accept()
+            print("Visualization connected!")
+        elif method == 'file':
+            self.metric_file_path = './metric_data_current.csv'
+            self.christoffel_file_path = './christoffel_data_current.csv'
+            self.metadata_file_path = './metric_metadata.json'
+            
+    def send_update(self, data):
+        if self.method == 'socket':
+            # Serialize data (could use pickle, JSON, or custom format)
+            serialized = pickle.dumps(data)
+            # Send data size first, then data
+            self.conn.sendall(len(serialized).to_bytes(4, byteorder='big'))
+            self.conn.sendall(serialized)
+        elif self.method == 'file':
+            try:
+                # Save metric tensor to CSV
+                if 'metric' in data:
+                    np.savetxt(self.metric_file_path, data['metric'], delimiter=',')
+                
+                # Save Christoffel symbols to CSV if available
+                if 'christoffel' in data:
+                    # For Christoffel symbols (3D tensor), we need to flatten and save with indices
+                    christoffel = data['christoffel']
+                    with open(self.christoffel_file_path, 'w') as f:
+                        dim = christoffel.shape[0]
+                        for i in range(dim):
+                            for j in range(dim):
+                                for k in range(dim):
+                                    value = christoffel[i, j, k]
+                                    if abs(value) > 1e-10:  # Only save non-zero values
+                                        f.write(f"{i},{j},{k},{value}\n")
+                
+                # Save metadata (epoch, step, etc.) to a JSON file
+                metadata = {
+                    'epoch': data.get('epoch', 0),
+                    'total_epochs': data.get('total_epochs', 100),
+                    'step': data.get('step', 0),
+                    'total_steps': data.get('total_steps', 0),
+                    'loss': data.get('loss', 0.0),
+                    'is_training': data.get('is_training', True)
+                }
+                
+                with open(self.metadata_file_path, 'w') as f:
+                    json.dump(metadata, f, indent=2)
+                    
+                logger.debug(f"Saved visualization data - Epoch: {metadata['epoch']}, Step: {metadata['step']}")
+                
+            except Exception as e:
+                logger.warning(f"Failed to save visualization data: {e}")
+                # Continue training even if visualization fails
 
 if __name__ == "__main__":
     import argparse
@@ -1112,4 +1446,4 @@ if __name__ == "__main__":
         }
     
     # Train the model
-    model, ricci_flow = train_model(config)
+    model, ricci_flow = train_model_with_visualization(config)

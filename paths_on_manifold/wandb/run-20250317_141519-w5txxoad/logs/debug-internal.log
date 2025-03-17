@@ -1,0 +1,16 @@
+{"time":"2025-03-17T14:15:19.240985-07:00","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/wandb/run-20250317_141519-w5txxoad/logs/debug-core.log"}
+{"time":"2025-03-17T14:15:19.352639-07:00","level":"INFO","msg":"created new stream","id":"w5txxoad"}
+{"time":"2025-03-17T14:15:19.352708-07:00","level":"INFO","msg":"stream: started","id":"w5txxoad"}
+{"time":"2025-03-17T14:15:19.352918-07:00","level":"INFO","msg":"writer: Do: started","stream_id":"w5txxoad"}
+{"time":"2025-03-17T14:15:19.352931-07:00","level":"INFO","msg":"handler: started","stream_id":"w5txxoad"}
+{"time":"2025-03-17T14:15:19.353066-07:00","level":"INFO","msg":"sender: started","stream_id":"w5txxoad"}
+{"time":"2025-03-17T14:15:19.547418-07:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-03-17T14:16:44.530607-07:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-03-17T14:16:44.53209-07:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-03-17T14:16:45.109321-07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-03-17T14:16:45.316672-07:00","level":"INFO","msg":"handler: operation stats","stats":{}}
+{"time":"2025-03-17T14:16:45.321022-07:00","level":"INFO","msg":"stream: closing","id":"w5txxoad"}
+{"time":"2025-03-17T14:16:45.321046-07:00","level":"INFO","msg":"writer: Close: closed","stream_id":"w5txxoad"}
+{"time":"2025-03-17T14:16:45.321053-07:00","level":"INFO","msg":"sender: closed","stream_id":"w5txxoad"}
+{"time":"2025-03-17T14:16:45.321179-07:00","level":"INFO","msg":"handler: closed","stream_id":"w5txxoad"}
+{"time":"2025-03-17T14:16:45.321285-07:00","level":"INFO","msg":"stream: closed","id":"w5txxoad"}

@@ -1,0 +1,17 @@
+{"time":"2025-03-17T14:21:55.235611-07:00","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/wandb/run-20250317_142155-3qwjp0s5/logs/debug-core.log"}
+{"time":"2025-03-17T14:21:55.347845-07:00","level":"INFO","msg":"created new stream","id":"3qwjp0s5"}
+{"time":"2025-03-17T14:21:55.34805-07:00","level":"INFO","msg":"stream: started","id":"3qwjp0s5"}
+{"time":"2025-03-17T14:21:55.348039-07:00","level":"INFO","msg":"handler: started","stream_id":"3qwjp0s5"}
+{"time":"2025-03-17T14:21:55.348416-07:00","level":"INFO","msg":"writer: Do: started","stream_id":"3qwjp0s5"}
+{"time":"2025-03-17T14:21:55.34865-07:00","level":"INFO","msg":"sender: started","stream_id":"3qwjp0s5"}
+{"time":"2025-03-17T14:21:55.632709-07:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-03-17T14:22:56.182849-07:00","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/files/mauruszach-southern-cal/manifold-deep-learning/3qwjp0s5/file_stream\": read tcp 192.168.4.92:59982->35.186.228.49:443: read: connection reset by peer"}
+{"time":"2025-03-17T14:23:22.626761-07:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-03-17T14:23:22.627822-07:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-03-17T14:23:23.399472-07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-03-17T14:23:23.628586-07:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"uploading history steps 208-239, summary, console lines 835-966","runtime_seconds":0.228885666}],"total_operations":1}}
+{"time":"2025-03-17T14:23:23.736477-07:00","level":"INFO","msg":"stream: closing","id":"3qwjp0s5"}
+{"time":"2025-03-17T14:23:23.736515-07:00","level":"INFO","msg":"writer: Close: closed","stream_id":"3qwjp0s5"}
+{"time":"2025-03-17T14:23:23.73653-07:00","level":"INFO","msg":"sender: closed","stream_id":"3qwjp0s5"}
+{"time":"2025-03-17T14:23:23.736679-07:00","level":"INFO","msg":"handler: closed","stream_id":"3qwjp0s5"}
+{"time":"2025-03-17T14:23:23.736692-07:00","level":"INFO","msg":"stream: closed","id":"3qwjp0s5"}

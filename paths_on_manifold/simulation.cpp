@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <filesystem>
 
 // Include OpenGL headers
 #ifdef __APPLE__
@@ -24,8 +25,8 @@
 // Constants
 const float G = 6.67430e-11;  // Gravitational constant
 const float SCALE_FACTOR = 1e-4;  // Adjusted scale factor for smoother visualization
-const int GRID_SIZE = 60;  // Increased grid size for smoother curvature
-const float GRID_SPACING = 0.5f;  // Decreased spacing for denser grid
+const int GRID_SIZE = 80;  // Increased grid size for smoother field appearance
+const float GRID_SPACING = 0.4f;  // Decreased spacing for denser grid
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 const float TIME_STEP = 0.02f;
@@ -266,8 +267,9 @@ public:
     Vector3 basisY;    // Y basis vector
     Vector3 basisZ;    // Z basis vector
     float curvatureDepth; // How much the point is curved downward
+    float changeRate; // Rate of change of metric at this point
     
-    GridPoint(const Vector3& pos) : position(pos), displaced(pos), curvatureDepth(0.0f) {
+    GridPoint(const Vector3& pos) : position(pos), displaced(pos), curvatureDepth(0.0f), changeRate(0.0f) {
         // Initialize basis vectors
         basisX = Vector3(0.3f, 0, 0);
         basisY = Vector3(0, 0.3f, 0);
@@ -354,53 +356,89 @@ public:
         auto metric = tensor.getMetricAt(position);
         int dim = tensor.dim;
         
-        // Calculate the Ricci scalar (trace of Ricci tensor) to determine curvature depth
-        float ricciScalar = 0.0f;
+        // Calculate a smooth curvature field based on the metric tensor
+        float curvatureField = 0.0f;
         
-        // Simplified computation of Ricci scalar from the metric
+        // Compute a smooth scalar field from the metric tensor
         for (int i = 0; i < dim; i++) {
             for (int j = 0; j < dim; j++) {
                 if (i == j) {
-                    // Contribution to Ricci scalar from diagonal elements
-                    ricciScalar += metric[i][j] * (i == 0 ? -1.0f : 1.0f);
+                    // Contribution from diagonal elements - smooth variation
+                    float factor = (i == 0) ? -1.0f : 1.0f;  // Different sign for time vs space
+                    curvatureField += metric[i][j] * factor * 0.5f;
+                }
+                else {
+                    // Contribution from off-diagonal elements - smooth mixing
+                    curvatureField += std::abs(metric[i][j]) * 0.8f;
                 }
             }
         }
         
-        // Scale for visualization
-        curvatureDepth = std::abs(ricciScalar) * 0.5f;
+        // Scale for visualization - use a smooth function
+        curvatureDepth = std::abs(curvatureField) * 1.5f;
         
-        // Apply the curvature to the z-coordinate
-        displaced.z -= curvatureDepth;
+        // Create a smooth field-like displacement
+        // Calculate distance from origin for radial effects
+        float distFromCenter = std::sqrt(position.x * position.x + position.y * position.y);
+        float maxDist = GRID_SIZE * GRID_SPACING * 0.5f;
+        float normalizedDist = distFromCenter / maxDist;
         
-        // Compute basis vectors from the metric tensor
+        // Create a smooth falloff function
+        float radialFalloff = std::exp(-normalizedDist * normalizedDist * 2.0f);
+        
+        // Apply smooth vertical displacement based on distance from center
+        float verticalDisplacement = curvatureDepth * radialFalloff;
+        displaced.z -= verticalDisplacement;
+        
+        // Apply smooth radial displacement for a field-like effect
+        if (distFromCenter > 0.1f) {
+            // Calculate direction vector from center
+            float angle = std::atan2(position.y, position.x);
+            
+            // Create a smooth radial displacement that varies with angle
+            float radialStrength = curvatureDepth * 0.3f * radialFalloff;
+            
+            // Apply a smooth wave pattern based on angle
+            float angularVariation = 0.5f + 0.5f * std::sin(angle * 4.0f + curvatureDepth * 2.0f);
+            
+            // Combine for final displacement
+            float finalRadialDisplacement = radialStrength * angularVariation;
+            
+            // Apply the displacement in the radial direction
+            displaced.x += finalRadialDisplacement * std::cos(angle);
+            displaced.y += finalRadialDisplacement * std::sin(angle);
+        }
+        
+        // Compute basis vectors that vary smoothly across the field
         // These represent how local coordinate frames are distorted by curvature
-        // For visualization, we'll just scale the original basis vectors based on metric components
-        Vector3 origBasisX(0.3f, 0, 0);
-        Vector3 origBasisY(0, 0.3f, 0);
-        Vector3 origBasisZ(0, 0, 0.3f);
+        float basisScale = 1.0f - 0.3f * curvatureDepth * radialFalloff;
+        basisX = Vector3(basisScale, 0.0f, 0.0f);
+        basisY = Vector3(0.0f, basisScale, 0.0f);
+        basisZ = Vector3(0.0f, 0.0f, basisScale);
         
-        if (dim >= 2) {
-            // X basis affected by g_xx component
-            float xScale = std::sqrt(std::abs(metric[1][1]));
-            basisX = origBasisX * xScale;
-            
-            // Y basis affected by g_yy component
-            float yScale = std::sqrt(std::abs(metric[2][2]));
-            basisY = origBasisY * yScale;
-            
-            // Z basis affected by g_zz component
-            float zScale = (dim > 3) ? std::sqrt(std::abs(metric[3][3])) : 1.0f;
-            basisZ = origBasisZ * zScale;
-            
-            // For off-diagonal components, we add a shear effect
-            if (dim > 2) {
-                if (std::abs(metric[1][2]) > 0.01f) {
-                    basisX = basisX + origBasisY * metric[1][2] * 0.2f;
-                    basisY = basisY + origBasisX * metric[1][2] * 0.2f;
-                }
-            }
-        }
+        // Add a small rotation to the basis vectors based on the metric
+        // This creates a smooth field-like appearance
+        float rotationAngle = curvatureDepth * 0.2f * radialFalloff;
+        
+        // Rotate around Z axis
+        float cosA = std::cos(rotationAngle);
+        float sinA = std::sin(rotationAngle);
+        
+        // Apply smooth rotation to basis vectors
+        Vector3 newBasisX = Vector3(
+            basisX.x * cosA - basisX.y * sinA,
+            basisX.x * sinA + basisX.y * cosA,
+            basisX.z
+        );
+        
+        Vector3 newBasisY = Vector3(
+            basisY.x * cosA - basisY.y * sinA,
+            basisY.x * sinA + basisY.y * cosA,
+            basisY.z
+        );
+        
+        basisX = newBasisX;
+        basisY = newBasisY;
     }
     
     void draw() const {
@@ -430,6 +468,10 @@ public:
         glVertex3f(displaced.x + basisZ.x, displaced.y + basisZ.y, displaced.z + basisZ.z);
         
         glEnd();
+        
+        // Modify color based on change rate
+        float changeColor = std::min(1.0f, changeRate * 10.0f);
+        glColor3f(0.7f + changeColor * 0.3f, 0.7f - changeColor * 0.4f, 0.7f - changeColor * 0.4f);
     }
 };
 
@@ -503,11 +545,12 @@ public:
         // Calculate acceleration using Christoffel symbols (geodesic equation)
         calculateAccelerationFromTensor(tensor);
         
-        // Update position using Verlet integration
-        position = position * 2.0f - prevPosition + acceleration * (deltaTime * deltaTime);
+        // Update position using Verlet integration with smaller time step for stability
+        float effectiveDeltaTime = deltaTime * 0.5f; // Use smaller time step for stability
+        position = position * 2.0f - prevPosition + acceleration * (effectiveDeltaTime * effectiveDeltaTime);
         
         // Update velocity
-        velocity = (position - prevPosition) * (1.0f / (2.0f * deltaTime));
+        velocity = (position - prevPosition) * (1.0f / (2.0f * effectiveDeltaTime));
         
         // Store current position as previous for next iteration
         prevPosition = temp;
@@ -518,21 +561,24 @@ public:
         // ds² = g_μν dx^μ dx^ν
         float ds_squared = 0.0f;
         
-        // Assuming velocity components match metric indices
-        for (int i = 0; i < tensor.dim && i < 3; i++) {
-            for (int j = 0; j < tensor.dim && j < 3; j++) {
-                // Get velocity components
-                float v_i = 0.0f, v_j = 0.0f;
-                
-                if (i == 0) v_i = 1.0f;  // dt component (assuming dt=1)
-                else if (i == 1) v_i = velocity.x;
-                else if (i == 2) v_j = velocity.y;
-                
-                if (j == 0) v_j = 1.0f;  // dt component
-                else if (j == 1) v_j = velocity.x;
-                else if (j == 2) v_j = velocity.y;
-                
-                ds_squared += metric[i][j] * v_i * v_j;
+        // Map our 3D velocity to the appropriate tensor components
+        std::vector<float> vel_components;
+        vel_components.push_back(1.0f);  // dt/dt = 1 (time component)
+        vel_components.push_back(velocity.x); // x component
+        vel_components.push_back(velocity.y); // y component
+        if (tensor.dim > 3) {
+            vel_components.push_back(velocity.z); // z component
+        }
+        
+        // Fill remaining components with zeros if needed
+        while (vel_components.size() < tensor.dim) {
+            vel_components.push_back(0.0f);
+        }
+        
+        // Calculate ds² using the metric tensor
+        for (int i = 0; i < tensor.dim; i++) {
+            for (int j = 0; j < tensor.dim; j++) {
+                ds_squared += metric[i][j] * vel_components[i] * vel_components[j];
             }
         }
         
@@ -679,16 +725,84 @@ public:
         // Get Christoffel symbols at the current position
         auto christoffel = tensor.getChristoffelAt(position);
         
-        // Apply the geodesic equation:
-        // d²x^μ/dt² + Γ^μ_νρ (dx^ν/dt)(dx^ρ/dt) = 0
+        // Get metric at current position for raising/lowering indices
+        auto metric = tensor.getMetricAt(position);
+        
+        // Calculate inverse metric for raising indices
+        std::vector<std::vector<float>> metric_inv;
+        metric_inv.resize(tensor.dim, std::vector<float>(tensor.dim, 0.0f));
+        
+        // Simple matrix inversion for 4x4 or smaller matrices
+        // In a real implementation, we would use a more robust method
+        if (tensor.dim <= 4) {
+            // Initialize identity matrix
+            std::vector<std::vector<float>> identity;
+            identity.resize(tensor.dim, std::vector<float>(tensor.dim, 0.0f));
+            for (int i = 0; i < tensor.dim; i++) {
+                identity[i][i] = 1.0f;
+            }
+            
+            // Copy metric to avoid modifying it
+            std::vector<std::vector<float>> m = metric;
+            
+            // Gaussian elimination with partial pivoting
+            for (int i = 0; i < tensor.dim; i++) {
+                // Find pivot
+                int pivot = i;
+                float max_val = std::abs(m[i][i]);
+                for (int j = i + 1; j < tensor.dim; j++) {
+                    if (std::abs(m[j][i]) > max_val) {
+                        max_val = std::abs(m[j][i]);
+                        pivot = j;
+                    }
+                }
+                
+                // Swap rows if needed
+                if (pivot != i) {
+                    std::swap(m[i], m[pivot]);
+                    std::swap(identity[i], identity[pivot]);
+                }
+                
+                // Scale row
+                float scale = m[i][i];
+                if (std::abs(scale) < 1e-10) {
+                    // Matrix is singular, add small regularization
+                    scale = (scale >= 0) ? 1e-10 : -1e-10;
+                }
+                
+                for (int j = 0; j < tensor.dim; j++) {
+                    m[i][j] /= scale;
+                    identity[i][j] /= scale;
+                }
+                
+                // Eliminate other rows
+                for (int j = 0; j < tensor.dim; j++) {
+                    if (j != i) {
+                        float factor = m[j][i];
+                        for (int k = 0; k < tensor.dim; k++) {
+                            m[j][k] -= factor * m[i][k];
+                            identity[j][k] -= factor * identity[i][k];
+                        }
+                    }
+                }
+            }
+            
+            // Copy result
+            metric_inv = identity;
+        } else {
+            // For larger matrices, just use a regularized approximation
+            for (int i = 0; i < tensor.dim; i++) {
+                metric_inv[i][i] = 1.0f / (metric[i][i] + 1e-10);
+            }
+        }
         
         // Map our 3D velocity to the appropriate tensor components
         std::vector<float> velocity_components;
-        velocity_components.push_back(1.0f);  // dt/dt = 1
-        velocity_components.push_back(velocity.x);
-        velocity_components.push_back(velocity.y);
+        velocity_components.push_back(1.0f);  // dt/dt = 1 (time component)
+        velocity_components.push_back(velocity.x); // x component
+        velocity_components.push_back(velocity.y); // y component
         if (tensor.dim > 3) {
-            velocity_components.push_back(velocity.z);
+            velocity_components.push_back(velocity.z); // z component
         }
         
         // Fill remaining components with zeros if needed
@@ -696,12 +810,14 @@ public:
             velocity_components.push_back(0.0f);
         }
         
-        // Calculate acceleration components
+        // Calculate acceleration components using the geodesic equation:
+        // d²x^μ/dt² + Γ^μ_νρ (dx^ν/dt)(dx^ρ/dt) = 0
         std::vector<float> accel_components(tensor.dim, 0.0f);
         
         for (int mu = 0; mu < tensor.dim; mu++) {
             for (int nu = 0; nu < tensor.dim; nu++) {
                 for (int rho = 0; rho < tensor.dim; rho++) {
+                    // The negative sign is already in the geodesic equation
                     accel_components[mu] -= christoffel[mu][nu][rho] * 
                                            velocity_components[nu] * 
                                            velocity_components[rho];
@@ -714,10 +830,34 @@ public:
         if (tensor.dim > 2) acceleration.y = accel_components[2];
         if (tensor.dim > 3) acceleration.z = accel_components[3];
         
-        // Scale for visualization
+        // Apply a scaling factor to make the effect more visible
+        // Increased from 2.0 to 5.0 for stronger effect
+        float geodesicStrength = 5.0f;
+        acceleration = acceleration * geodesicStrength;
+        
+        // Add a direct pull toward the center of curvature for visualization
+        // This simulates the "pull" of gravity in a more intuitive way
+        Vector3 centerPull = Vector3(0, 0, 0) - position;
+        float distToCenter = centerPull.length();
+        if (distToCenter > 0.001f) {
+            centerPull = centerPull * (1.0f / distToCenter);
+            
+            // Get the 00 component of the metric (time-time) as a measure of gravitational potential
+            float gravPotential = 0.0f;
+            if (tensor.dim > 0) {
+                // The more negative g_00 is, the stronger the gravity
+                gravPotential = 1.0f - metric[0][0];
+            }
+            
+            // Scale the pull based on distance (inverse square law)
+            float pullStrength = 2.0f * gravPotential / (distToCenter * distToCenter + 0.1f);
+            acceleration = acceleration + centerPull * pullStrength;
+        }
+        
+        // Limit extreme accelerations for stability
         float accelMagnitude = acceleration.length();
-        if (accelMagnitude > 10.0f) {
-            acceleration = acceleration * (10.0f / accelMagnitude);
+        if (accelMagnitude > 20.0f) {
+            acceleration = acceleration * (20.0f / accelMagnitude);
         }
     }
     
@@ -837,6 +977,29 @@ private:
     sf::Clock simulationClock;
     float elapsedTime = 0.0f;
     
+    // Add training progress tracking
+    int currentEpoch = 0;
+    int totalEpochs = 100;
+    int currentStep = 0;
+    int totalSteps = 0;
+    float currentLoss = 0.0f;
+    bool isTraining = false;
+    
+    // Add file monitoring variables
+    std::filesystem::file_time_type lastMetricTime;
+    std::filesystem::file_time_type lastChristoffelTime;
+    std::filesystem::file_time_type lastMetadataTime;
+    
+    // Add visualization enhancement variables
+    bool showTimeline = true;
+    float timelinePosition = 1.0f; // 0.0 = start of training, 1.0 = current state
+    std::vector<std::vector<std::vector<float>>> metricHistory; // Store history of metrics
+    int maxHistorySize = 100; // Maximum number of metrics to store in history
+    
+    // Add color coding for metric changes
+    std::vector<std::vector<float>> initialMetric; // Store initial metric for comparison
+    std::vector<std::vector<float>> metricChangeRate; // Store rate of change for visualization
+    
 public:
     SpacetimeSimulator() : 
         window(sf::VideoMode(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT)), 
@@ -878,18 +1041,124 @@ public:
         // Neutron star
         addMass(Vector3(10, -8, 0), 150.0f);
         
-        // Add initial particles with orbital trajectories
-        // Particle in elliptical orbit around the first mass
-        addParticle(Vector3(-10, -7, 0), Vector3(0, 2.5f, 0), 0.2f, sf::Color(0, 255, 255));  // Cyan
+        // Clear any existing particles
+        particles.clear();
         
-        // Particle in tight orbit around the second mass (black hole)
-        addParticle(Vector3(7, 10, 0), Vector3(-3.0f, 0, 0), 0.2f, sf::Color(255, 255, 0));  // Yellow
+        // Add a grid of test particles to visualize geodesic flow
+        const int particleGridSize = 10; // Increased from 6 to 10 for more particles
+        const float particleSpacing = 3.0f; // Decreased from 4.0f to 3.0f for denser grid
+        const float initialSpeed = 1.0f; // Decreased from 1.5f for more controlled initial motion
+        
+        // Create a grid of particles with various initial velocities
+        for (int x = -particleGridSize/2; x <= particleGridSize/2; x++) {
+            for (int y = -particleGridSize/2; y <= particleGridSize/2; y++) {
+                // Skip the center point where masses might be
+                if (x == 0 && y == 0) continue;
+                
+                float xPos = x * particleSpacing;
+                float yPos = y * particleSpacing;
+                
+                // Calculate direction toward center for some particles
+                float dx = -xPos;
+                float dy = -yPos;
+                float dist = std::sqrt(dx*dx + dy*dy);
+                
+                if (dist > 0.001f) {
+                    dx /= dist;
+                    dy /= dist;
+                }
+                
+                // Create particles with different velocity patterns
+                
+                // 1. Particles with no initial velocity (free fall)
+                if ((x + y) % 4 == 0) {
+                    addParticle(
+                        Vector3(xPos, yPos, 0),
+                        Vector3(0, 0, 0), // No initial velocity
+                        0.15f,
+                        sf::Color(255, 255, 255)  // White
+                    );
+                }
+                // 2. Particles moving toward center (converging)
+                else if ((x + y) % 4 == 1) {
+                    addParticle(
+                        Vector3(xPos, yPos, 0),
+                        Vector3(dx * initialSpeed * 0.5f, dy * initialSpeed * 0.5f, 0),
+                        0.15f,
+                        sf::Color(0, 255, 255)  // Cyan
+                    );
+                }
+                // 3. Particles in circular orbit
+                else if ((x + y) % 4 == 2) {
+                    // Perpendicular velocity for circular orbit
+                    // Scale orbital velocity by distance (Keplerian orbits)
+                    float orbitalSpeed = initialSpeed * 1.5f / sqrt(dist);
+                    addParticle(
+                        Vector3(xPos, yPos, 0),
+                        Vector3(-dy * orbitalSpeed, dx * orbitalSpeed, 0),
+                        0.15f,
+                        sf::Color(255, 255, 0)  // Yellow
+                    );
+                }
+                // 4. Particles moving tangentially (spiral paths)
+                else {
+                    // Combination of radial and tangential velocity
+                    addParticle(
+                        Vector3(xPos, yPos, 0),
+                        Vector3(-dy * initialSpeed * 0.7f + dx * 0.3f, 
+                                dx * initialSpeed * 0.7f + dy * 0.3f, 0),
+                        0.15f,
+                        sf::Color(255, 0, 255)  // Magenta
+                    );
+                }
+            }
+        }
+        
+        // Add a ring of particles around the center to demonstrate orbital dynamics
+        const int ringParticles = 16;
+        const float ringRadius = 6.0f;
+        const float ringSpeed = 1.8f;
+        
+        for (int i = 0; i < ringParticles; i++) {
+            float angle = 2.0f * M_PI * i / ringParticles;
+            float xPos = ringRadius * cos(angle);
+            float yPos = ringRadius * sin(angle);
+            
+            // Tangential velocity for circular orbit
+            float vx = -ringSpeed * sin(angle);
+            float vy = ringSpeed * cos(angle);
+            
+            addParticle(
+                Vector3(xPos, yPos, 0),
+                Vector3(vx, vy, 0),
+                0.2f,
+                sf::Color(0, 200, 100)  // Green-blue
+            );
+        }
+        
+        // Add special test particles to show interesting geodesic paths
+        
+        // Particle in tight orbit around the center
+        addParticle(Vector3(0, 3.0f, 0), Vector3(2.5f, 0, 0), 0.25f, sf::Color(255, 0, 0));  // Red
+        
+        // Particle with high eccentricity orbit
+        addParticle(Vector3(0, 8.0f, 0), Vector3(3.0f, -0.5f, 0), 0.25f, sf::Color(0, 255, 0));  // Green
         
         // Particle in figure-8 trajectory between two masses
-        addParticle(Vector3(0, 0, 0), Vector3(1.8f, 1.8f, 0), 0.2f, sf::Color(255, 0, 255));  // Magenta
+        addParticle(Vector3(0, 0, 5.0f), Vector3(2.2f, 2.2f, 0), 0.25f, sf::Color(0, 0, 255));  // Blue
+        
+        // Particle with high velocity passing near the center (gravitational slingshot)
+        addParticle(Vector3(15, 15, 0), Vector3(-3.0f, -3.0f, 0), 0.25f, sf::Color(255, 165, 0));  // Orange
+        
+        // Add a test particle that starts from rest far away to demonstrate infall
+        addParticle(Vector3(-12, -12, 0), Vector3(0, 0, 0), 0.3f, sf::Color(255, 0, 255));  // Magenta
         
         // Try to load tensor data from Python model output
         loadModelData();
+        
+        // Initialize metric history
+        initialMetric = tensor->metric;
+        metricChangeRate.resize(tensor->dim, std::vector<float>(tensor->dim, 0.0f));
     }
     
     ~SpacetimeSimulator() {
@@ -965,6 +1234,21 @@ public:
     void updateGridFromTensor() {
         for (auto& point : grid) {
             point.calculateDisplacementFromMetric(*tensor);
+            
+            // Add color coding based on metric change rate
+            if (!metricChangeRate.empty()) {
+                // Calculate average change rate for visualization
+                float avgChange = 0.0f;
+                for (int i = 0; i < tensor->dim; i++) {
+                    for (int j = 0; j < tensor->dim; j++) {
+                        avgChange += std::abs(metricChangeRate[i][j]);
+                    }
+                }
+                avgChange /= (tensor->dim * tensor->dim);
+                
+                // Store change rate for visualization
+                point.changeRate = avgChange;
+            }
         }
     }
     
@@ -1140,6 +1424,20 @@ public:
                     // Reload model data
                     loadModelData();
                 }
+                else if (keyPressed->scancode == sf::Keyboard::Scancode::T) {
+                    // Toggle timeline view
+                    showTimeline = !showTimeline;
+                }
+                else if (keyPressed->scancode == sf::Keyboard::Scancode::Left) {
+                    // Move back in timeline
+                    timelinePosition = std::max(0.0f, timelinePosition - 0.05f);
+                    updateVisualizationFromTimeline();
+                }
+                else if (keyPressed->scancode == sf::Keyboard::Scancode::Right) {
+                    // Move forward in timeline
+                    timelinePosition = std::min(1.0f, timelinePosition + 0.05f);
+                    updateVisualizationFromTimeline();
+                }
             }
         }
     }
@@ -1181,6 +1479,10 @@ public:
     void run() {
         while (window.isOpen()) {
             handleEvents();
+            
+            // Check for metric updates
+            checkForUpdates();
+            
             update();
             render();
         }
@@ -1240,7 +1542,7 @@ public:
             0, 1, 0            // Up vector
         );
         
-        // Draw the spacetime mesh
+        // Draw the spacetime mesh with color coding based on metric changes
         drawSpacetimeMesh();
         
         // Draw masses
@@ -1272,12 +1574,32 @@ public:
         
         glDisable(GL_BLEND);
         
+        // Draw timeline if enabled
+        if (showTimeline && !metricHistory.empty()) {
+            drawTimeline();
+        }
+        
         // Draw instructions text using SFML
         window.pushGLStates();
         
         sf::Font font;
         if (font.openFromFile("/System/Library/Fonts/Helvetica.ttc")) {
             std::string modeStr = useModelData ? "MODEL-BASED (Python Manifold)" : "TRADITIONAL (GR approximation)";
+            
+            // Add training progress information
+            std::string trainingInfo = "";
+            if (isTraining && useModelData) {
+                trainingInfo = "\n\nTraining Progress: Epoch " + std::to_string(currentEpoch) + 
+                               "/" + std::to_string(totalEpochs) +
+                               ", Step " + std::to_string(currentStep) +
+                               ", Loss: " + std::to_string(currentLoss);
+                               
+                // Add timeline information
+                if (showTimeline) {
+                    trainingInfo += "\nTimeline: " + std::to_string(static_cast<int>(timelinePosition * 100)) + "% (T to toggle, Left/Right arrows to navigate)";
+                }
+            }
+            
             sf::Text text(font, 
                 "Controls:\n"
                 "Left-click + drag: Rotate view\n"
@@ -1287,8 +1609,10 @@ public:
                 "R: Add random masses\n"
                 "P: Add random particle\n"
                 "M: Toggle simulation mode\n"
-                "L: Reload Python model data\n\n"
-                "Current mode: " + modeStr,
+                "L: Reload Python model data\n"
+                "T: Toggle timeline view\n"
+                "Left/Right arrows: Navigate timeline\n\n"
+                "Current mode: " + modeStr + trainingInfo,
                 14);
             text.setFillColor(sf::Color::White);
             text.setPosition(sf::Vector2f(10, 10));
@@ -1397,6 +1721,202 @@ public:
             }
             glEnd();
         }
+    }
+    
+    void checkForUpdates() {
+        bool updated = false;
+        
+        // Check for metric tensor updates
+        if (std::filesystem::exists("./metric_data_current.csv")) {
+            auto currentMetricTime = std::filesystem::last_write_time("./metric_data_current.csv");
+            if (currentMetricTime != lastMetricTime) {
+                std::cout << "Loading updated metric tensor..." << std::endl;
+                
+                // Store the previous metric for comparison
+                std::vector<std::vector<float>> previousMetric = tensor->metric;
+                
+                if (tensor->loadMetricFromCSV("./metric_data_current.csv")) {
+                    lastMetricTime = currentMetricTime;
+                    updated = true;
+                    
+                    // If this is the first update, store as initial metric
+                    if (initialMetric[0][0] == 0.0f) {
+                        initialMetric = tensor->metric;
+                    }
+                    
+                    // Add to metric history
+                    metricHistory.push_back(tensor->metric);
+                    if (metricHistory.size() > maxHistorySize) {
+                        metricHistory.erase(metricHistory.begin());
+                    }
+                    
+                    // Calculate rate of change for visualization
+                    for (int i = 0; i < tensor->dim; i++) {
+                        for (int j = 0; j < tensor->dim; j++) {
+                            if (!previousMetric.empty()) {
+                                metricChangeRate[i][j] = tensor->metric[i][j] - previousMetric[i][j];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Check for Christoffel symbols updates
+        if (std::filesystem::exists("./christoffel_data_current.csv")) {
+            auto currentChristoffelTime = std::filesystem::last_write_time("./christoffel_data_current.csv");
+            if (currentChristoffelTime != lastChristoffelTime) {
+                std::cout << "Loading updated Christoffel symbols..." << std::endl;
+                if (tensor->loadChristoffelFromCSV("./christoffel_data_current.csv")) {
+                    lastChristoffelTime = currentChristoffelTime;
+                    updated = true;
+                }
+            }
+        }
+        
+        // Check for metadata updates (training progress)
+        if (std::filesystem::exists("./metric_metadata.json")) {
+            auto currentMetadataTime = std::filesystem::last_write_time("./metric_metadata.json");
+            if (currentMetadataTime != lastMetadataTime) {
+                loadMetadataFromJSON("./metric_metadata.json");
+                lastMetadataTime = currentMetadataTime;
+            }
+        }
+        
+        // Update visualization if any data changed
+        if (updated && useModelData) {
+            updateGridFromTensor();
+        }
+    }
+    
+    void loadMetadataFromJSON(const std::string& filename) {
+        std::ifstream file(filename);
+        if (!file.is_open()) {
+            std::cerr << "Error: Could not open metadata file: " << filename << std::endl;
+            return;
+        }
+        
+        std::string line;
+        std::string jsonStr;
+        
+        while (std::getline(file, line)) {
+            jsonStr += line;
+        }
+        
+        // Simple JSON parsing (for a more robust solution, use a proper JSON library)
+        try {
+            // Extract training progress information
+            auto extractValue = [&jsonStr](const std::string& key) -> std::string {
+                size_t pos = jsonStr.find("\"" + key + "\"");
+                if (pos == std::string::npos) return "";
+                
+                pos = jsonStr.find(":", pos);
+                if (pos == std::string::npos) return "";
+                
+                size_t start = jsonStr.find_first_not_of(" \t\n\r", pos + 1);
+                if (start == std::string::npos) return "";
+                
+                if (jsonStr[start] == '\"') {
+                    // String value
+                    start++;
+                    size_t end = jsonStr.find("\"", start);
+                    if (end == std::string::npos) return "";
+                    return jsonStr.substr(start, end - start);
+                } else {
+                    // Number or boolean value
+                    size_t end = jsonStr.find_first_of(",}\n", start);
+                    if (end == std::string::npos) return "";
+                    return jsonStr.substr(start, end - start);
+                }
+            };
+            
+            std::string epochStr = extractValue("epoch");
+            std::string totalEpochsStr = extractValue("total_epochs");
+            std::string stepStr = extractValue("step");
+            std::string totalStepsStr = extractValue("total_steps");
+            std::string lossStr = extractValue("loss");
+            std::string trainingStr = extractValue("is_training");
+            
+            if (!epochStr.empty()) currentEpoch = std::stoi(epochStr);
+            if (!totalEpochsStr.empty()) totalEpochs = std::stoi(totalEpochsStr);
+            if (!stepStr.empty()) currentStep = std::stoi(stepStr);
+            if (!totalStepsStr.empty()) totalSteps = std::stoi(totalStepsStr);
+            if (!lossStr.empty()) currentLoss = std::stof(lossStr);
+            if (!trainingStr.empty()) isTraining = (trainingStr == "true");
+            
+            std::cout << "Training progress: Epoch " << currentEpoch << "/" << totalEpochs 
+                      << ", Step " << currentStep << "/" << totalSteps 
+                      << ", Loss: " << currentLoss << std::endl;
+        } catch (const std::exception& e) {
+            std::cerr << "Error parsing metadata JSON: " << e.what() << std::endl;
+        }
+        
+        file.close();
+    }
+    
+    void updateVisualizationFromTimeline() {
+        // Only update if we have history and not at the end of timeline
+        if (metricHistory.empty() || timelinePosition >= 0.99f) {
+            return;
+        }
+        
+        // Calculate which historical metric to use based on timeline position
+        int historyIndex = static_cast<int>(timelinePosition * (metricHistory.size() - 1));
+        historyIndex = std::min(static_cast<int>(metricHistory.size()) - 1, std::max(0, historyIndex));
+        
+        // Temporarily replace current metric with historical one
+        std::vector<std::vector<float>> currentMetric = tensor->metric;
+        tensor->metric = metricHistory[historyIndex];
+        
+        // Update visualization
+        updateGridFromTensor();
+        
+        // Restore current metric
+        if (timelinePosition >= 0.99f) {
+            tensor->metric = currentMetric;
+        }
+    }
+    
+    void drawTimeline() {
+        window.pushGLStates();
+        
+        // Draw timeline bar
+        sf::RectangleShape timelineBar(sf::Vector2f(WINDOW_WIDTH - 100, 20));
+        timelineBar.setPosition(sf::Vector2f(50, WINDOW_HEIGHT - 40));
+        timelineBar.setFillColor(sf::Color(50, 50, 50, 200));
+        timelineBar.setOutlineColor(sf::Color::White);
+        timelineBar.setOutlineThickness(1);
+        window.draw(timelineBar);
+        
+        // Draw timeline position marker
+        sf::RectangleShape positionMarker(sf::Vector2f(10, 30));
+        positionMarker.setPosition(sf::Vector2f(50 + timelinePosition * (WINDOW_WIDTH - 100 - 10), WINDOW_HEIGHT - 45));
+        positionMarker.setFillColor(sf::Color::Yellow);
+        window.draw(positionMarker);
+        
+        // Draw epoch markers
+        if (totalEpochs > 0) {
+            for (int i = 0; i <= totalEpochs; i++) {
+                float position = static_cast<float>(i) / totalEpochs;
+                sf::RectangleShape marker(sf::Vector2f(2, 10));
+                marker.setPosition(sf::Vector2f(50 + position * (WINDOW_WIDTH - 100), WINDOW_HEIGHT - 35));
+                marker.setFillColor(sf::Color::White);
+                window.draw(marker);
+                
+                // Add epoch numbers at intervals
+                if (i % std::max(1, totalEpochs / 10) == 0) {
+                    sf::Font font;
+                    if (font.openFromFile("/System/Library/Fonts/Helvetica.ttc")) {
+                        sf::Text epochText(font, std::to_string(i), 12);
+                        epochText.setFillColor(sf::Color::White);
+                        epochText.setPosition(sf::Vector2f(50 + position * (WINDOW_WIDTH - 100) - 5, WINDOW_HEIGHT - 20));
+                        window.draw(epochText);
+                    }
+                }
+            }
+        }
+        
+        window.popGLStates();
     }
 };
 

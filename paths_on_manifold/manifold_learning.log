@@ -1162,3 +1162,7 @@ PDF statistics:
  85 named destinations out of 1000 (max. 500000)
  43781 words of extra memory for PDF output out of 51595 (max. 10000000)
 
+2025-03-17 14:04:44,871 - path_analysis - INFO - Initialized W&B monitoring: manifold-deep-learning/metric-evolution-20250317-140256
+2025-03-17 14:06:12,331 - path_analysis - INFO - Initialized W&B monitoring: manifold-deep-learning/manifold-learning-20250317-140611
+2025-03-17 14:06:12,525 - path_analysis - INFO - Dataset visualization saved to ./results/visualizations/dataset.png
+2025-03-17 14:13:21,158 - path_analysis - INFO - Initialized W&B monitoring: manifold-deep-learning/metric-evolution-20250317-141319

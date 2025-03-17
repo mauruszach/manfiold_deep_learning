@@ -1,0 +1,52 @@
+{
+  "os": "macOS-13.5.2-arm64-arm-64bit",
+  "python": "CPython 3.12.0",
+  "startedAt": "2025-03-17T21:06:11.710502Z",
+  "args": [
+    "--run-type",
+    "both",
+    "--project",
+    "manifold-deep-learning",
+    "--epochs",
+    "30"
+  ],
+  "program": "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/run_wandb_monitor.py",
+  "codePath": "paths_on_manifold/run_wandb_monitor.py",
+  "git": {
+    "remote": "https://github.com/mauruszach/manfiold_deep_learning.git",
+    "commit": "1885a260b459938cabb002684d3a6e6b3b4bb3d8"
+  },
+  "email": "mauruszach@gmail.com",
+  "root": "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold",
+  "host": "Zachs-MacBook-Pro-3.local",
+  "executable": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+  "codePathLocal": "run_wandb_monitor.py",
+  "cpu_count": 10,
+  "cpu_count_logical": 10,
+  "disk": {
+    "/": {
+      "total": "994662584320",
+      "used": "636240039936"
+    },
+    "/System/Volumes/Data": {
+      "total": "994662584320",
+      "used": "636240039936"
+    }
+  },
+  "memory": {
+    "total": "17179869184"
+  },
+  "cpu": {
+    "count": 10,
+    "countLogical": 10
+  },
+  "apple": {
+    "name": "Apple M1 Pro",
+    "ecpuCores": 2,
+    "pcpuCores": 8,
+    "gpuCores": 16,
+    "memoryGb": 16,
+    "swapTotalBytes": "24696061952",
+    "ramTotalBytes": "17179869184"
+  }
+}
