@@ -1,121 +1,123 @@
-# Real-Time Manifold Learning Visualization
+# Manifold Deep Learning
 
-This project provides a real-time visualization of manifold learning, showing how a neural network learns the metric tensor of a manifold and how particles move in the resulting curved spacetime.
+A research project for learning and visualizing curved spacetime manifolds using deep learning techniques.
 
-## Components
+## Project Structure
 
-The system consists of two main components:
+```
+paths_on_manifold/
+├── bin/                  # Executables and binaries
+│   └── simulation        # C++ simulation executable
+├── data/                 # Data files and outputs
+│   ├── christoffel_data_current.csv
+│   ├── metric_data_current.csv
+│   ├── metric_metadata.json
+│   └── ...
+├── docs/                 # Documentation
+│   ├── README.md         # Detailed documentation
+│   ├── manifold_learning.pdf
+│   └── ...
+├── models/               # Trained models and model definitions
+├── src/                  # Source code
+│   ├── path_analysis.py  # Core logic for path analysis on manifolds
+│   ├── python_model_exporter.py
+│   ├── run_wandb_monitor.py
+│   ├── simulation.cpp    # C++ simulation code
+│   └── ...
+├── tests/                # Test files and results
+│   ├── run_test.py
+│   ├── test_results/
+│   └── ...
+├── visualization/        # Visualization scripts and tools
+│   ├── blender_script.py
+│   ├── blender_live_monitor.py
+│   ├── run_live_visualization.py
+│   └── test_visualization.py
+├── main.py               # Main entry point
+└── README.md             # This file
+```
 
-1. **Python Training Component** (`path_analysis.py`): Trains a neural network to learn the metric tensor of a manifold from data.
-2. **C++ Visualization Component** (`simulation.cpp`): Visualizes the learned metric tensor and simulates particle motion in the resulting curved spacetime.
-
-## Setup and Installation
+## Installation
 
 ### Prerequisites
 
-- Python 3.7+ with NumPy, PyTorch, SciPy, Matplotlib, and SymPy
-- C++ compiler with C++17 support
-- SFML library for graphics
-- OpenGL
+- Python 3.8+
+- C++ compiler (for simulation)
+- Blender 3.0+ (for 3D visualization)
+- PyTorch 1.8+
 
-### Installation
+### Setup
 
-1. Install Python dependencies:
-   ```bash
-   pip install numpy torch scipy matplotlib sympy pandas
-   ```
+Clone the repository:
 
-2. Install SFML:
-   - macOS: `brew install sfml`
-   - Linux: `sudo apt-get install libsfml-dev`
-   - Windows: Download from [SFML website](https://www.sfml-dev.org/download.php)
+```bash
+git clone <repository-url>
+cd paths_on_manifold
+```
 
-3. Compile the C++ visualization:
-   ```bash
-   g++ -std=c++17 -DGL_SILENCE_DEPRECATION -o simulation simulation.cpp -I/opt/homebrew/opt/sfml/include -L/opt/homebrew/opt/sfml/lib -lsfml-graphics -lsfml-window -lsfml-system -framework OpenGL
-   ```
-   
-   Note: Adjust the include and library paths based on your SFML installation.
+Install Python dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Compile the simulation (if needed):
+
+```bash
+cd src
+g++ -o ../bin/simulation simulation.cpp -std=c++17 -O2
+```
 
 ## Usage
 
-### Running the Visualization Test
+The project provides a unified command-line interface through `main.py`:
 
-To test the visualization without running the full training:
+```bash
+# Run test visualization
+python main.py --visualize
 
-1. Run the test script:
-   ```bash
-   python test_visualization.py
-   ```
+# Run C++ simulation
+python main.py --simulate
 
-2. In a separate terminal, run the visualization:
-   ```bash
-   ./simulation
-   ```
+# Run Blender visualization
+python main.py --blender
 
-The test script will generate a series of evolving metrics that transition from flat to curved spacetime, and the visualization will display the resulting curvature and particle motion.
+# Run tests
+python main.py --test
 
-### Running the Full Training with Visualization
+# Run path analysis
+python main.py --analyze
+```
 
-1. Start the visualization:
-   ```bash
-   ./simulation
-   ```
+## Key Components
 
-2. In a separate terminal, run the training:
-   ```bash
-   python path_analysis.py
-   ```
+### Manifold Learning
 
-The training script will periodically send updated metric tensors to the visualization, allowing you to see how the learned manifold evolves during training.
+The core of the project is a deep learning approach to learning the structure of manifolds, particularly those representing curved spacetime in general relativity. The model learns to predict:
 
-## Visualization Controls
+- Metric tensors
+- Christoffel symbols
+- Geodesic paths
 
-- **Left-click + drag**: Rotate view
-- **Right-click**: Add mass at location
-- **Mouse wheel**: Zoom in/out
-- **C**: Clear additional masses
-- **R**: Add random masses
-- **P**: Add random particle
-- **M**: Toggle between model-based and traditional simulation
-- **L**: Reload Python model data
-- **T**: Toggle timeline view
-- **Left/Right arrows**: Navigate timeline
+### Visualization
 
-## File-Based Communication
+Multiple visualization methods are provided:
 
-The Python and C++ components communicate through files:
+1. **C++ Real-time Simulation**: Interactive visualization of particles moving on the manifold
+2. **Blender Visualization**: High-quality rendering of the manifold and geodesics
+3. **Test Visualization**: Simple visualization for testing and debugging
 
-- `metric_data_current.csv`: Contains the current metric tensor
-- `christoffel_data_current.csv`: Contains the Christoffel symbols
-- `metric_metadata.json`: Contains metadata about the training progress
+### Data Generation and Analysis
 
-## Timeline Feature
+The project includes tools for:
 
-The timeline feature allows you to scrub through the evolution of the metric tensor during training. This is useful for visualizing how the manifold changes over time.
+- Generating synthetic manifold data
+- Analyzing paths on manifolds
+- Computing geometric quantities (Riemann tensor, Ricci curvature, etc.)
 
-## Customization
+## Contributing
 
-You can customize the visualization by modifying the following parameters in `simulation.cpp`:
-
-- `GRID_SIZE`: Number of grid points in each dimension
-- `GRID_SPACING`: Spacing between grid points
-- `PARTICLE_SPEED`: Base speed for particles
-- `GRAVITY_SCALE`: Scale factor for gravitational effects
-
-You can customize the training by modifying the parameters in `path_analysis.py`:
-
-- `input_dim`: Dimension of input data
-- `embedding_dim`: Dimension of the manifold embedding
-- `num_epochs`: Number of training epochs
-- `learning_rate`: Learning rate for optimization
-- `data_type`: Type of synthetic data to generate ('sphere', 'torus', 'swiss_roll', etc.)
-
-## Troubleshooting
-
-- If the visualization doesn't update, check that the file paths in both components match.
-- If you see OpenGL deprecation warnings, you can silence them with the `-DGL_SILENCE_DEPRECATION` flag.
-- If the visualization crashes, try reducing the grid size or particle count.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
