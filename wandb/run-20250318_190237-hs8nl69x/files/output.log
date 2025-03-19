@@ -1,0 +1,3 @@
+2025-03-18 19:02:38,482 - src.path_analysis - INFO - Initialized W&B monitoring: manifold-deep-learning/sphere-5d-20250318-190236
+/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/src/path_analysis.py:985: UserWarning: Starting a Matplotlib GUI outside of the main thread will likely fail.
+  fig = plt.figure(figsize=(10, 8))

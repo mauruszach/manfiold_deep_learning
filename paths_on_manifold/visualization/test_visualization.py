@@ -26,6 +26,19 @@ def save_christoffel_to_csv(christoffel, filename='./christoffel_data_current.cs
                         f.write(f"{i},{j},{k},{value}\n")
     print(f"Saved Christoffel symbols to {filename}")
 
+def save_riemann_to_csv(riemann, filename='./riemann_tensor.csv'):
+    """Save Riemann tensor to CSV file"""
+    with open(filename, 'w') as f:
+        dim = riemann.shape[0]
+        for i in range(dim):
+            for j in range(dim):
+                for k in range(dim):
+                    for l in range(dim):
+                        value = riemann[i, j, k, l]
+                        if abs(value) > 1e-10:  # Only save non-zero values
+                            f.write(f"{i},{j},{k},{l},{value}\n")
+    print(f"Saved Riemann tensor to {filename}")
+
 def save_metadata(epoch, total_epochs, step, total_steps, loss, is_training=True, filename='./metric_metadata.json'):
     """Save metadata to JSON file"""
     metadata = {
@@ -145,125 +158,139 @@ def generate_evolving_metric(epoch, total_epochs, dim=4):
     return metric
 
 def main():
-    # Simulation parameters
-    dim = 4  # 4D spacetime
-    total_epochs = 30  # Increased for smoother evolution
-    steps_per_epoch = 8  # Increased for more granular updates
-    total_steps = total_epochs * steps_per_epoch
-    update_interval = 0.2  # seconds between updates - faster updates for smoother animation
+    """Main test function to simulate a training process"""
+    # Specify data directories - make data directory path relative to the script location
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.dirname(os.path.dirname(script_dir))
+    data_dir = os.path.join(project_root, 'paths_on_manifold', 'data')
+    
+    # Ensure data directory exists
+    os.makedirs(data_dir, exist_ok=True)
+    
+    # Set up file paths
+    metric_file = os.path.join(data_dir, 'metric_tensor.csv')
+    christoffel_file = os.path.join(data_dir, 'christoffel_symbols.csv')
+    riemann_file = os.path.join(data_dir, 'riemann_tensor.csv')
+    metadata_file = os.path.join(data_dir, 'metric_metadata.json')
+    
+    # Also save to current directory for backward compatibility
+    metric_file_current = 'metric_data_current.csv'
+    christoffel_file_current = 'christoffel_data_current.csv'
+    riemann_file_current = 'riemann_tensor.csv'
+    metadata_file_current = 'metric_metadata.json'
+    
+    # Clean up old wandb runs if any
+    wandb_dir = os.path.join(data_dir, 'wandb')
+    if os.path.exists(wandb_dir):
+        import shutil
+        for subdir in os.listdir(wandb_dir):
+            if subdir.startswith('run-'):
+                shutil.rmtree(os.path.join(wandb_dir, subdir))
     
     # Initialize Weights & Biases
-    wandb.init(
-        project="manifold-deep-learning",  # Project name
-        config={
-            "dimensions": dim,
-            "total_epochs": total_epochs,
-            "steps_per_epoch": steps_per_epoch,
-            "total_steps": total_steps,
-            "update_interval": update_interval,
-        },
-        name="gravitational-field-simulation",  # Run name
-        tags=["spacetime", "metric-evolution", "geodesics"]  # Tags for filtering
-    )
+    run = wandb.init(project="manifold-deep-learning", name="test-visualization")
     
-    # Create custom W&B plots for the metric tensor
-    wandb.define_metric("epoch")
-    wandb.define_metric("step")
-    wandb.define_metric("loss", step_metric="step")
-    wandb.define_metric("curvature_strength", step_metric="step")
-    wandb.define_metric("metric_determinant", step_metric="step")
+    # Simulate a training process
+    total_epochs = 100
+    total_steps = 1000
     
-    print(f"Starting visualization test with {total_epochs} epochs, {steps_per_epoch} steps per epoch")
-    print(f"Updates will be sent every {update_interval} seconds")
-    print("Press Ctrl+C to stop the test")
+    # Create a 5x5 metric tensor that will evolve over time
+    dim = 5
+    metric = np.eye(dim)
     
-    try:
-        for epoch in range(total_epochs):
-            for step in range(steps_per_epoch):
-                # Calculate global step
-                global_step = epoch * steps_per_epoch + step
-                
-                # Generate evolving metric
-                metric = generate_evolving_metric(epoch, total_epochs, dim)
-                
-                # Calculate Christoffel symbols
-                christoffel = calculate_christoffel(metric)
-                
-                # Calculate fake loss that decreases over time
-                loss = 1.0 - 0.8 * (global_step / total_steps)
-                loss = max(0.1, loss + 0.05 * np.random.randn())  # Add some noise
-                
-                # Calculate some additional metrics for monitoring
-                metric_det = np.linalg.det(metric)
-                eigenvalues = np.linalg.eigvalsh(metric)
-                curvature_str = (epoch / total_epochs) * 3.0  # Same calculation as in generate_evolving_metric
-                
-                # Save data for visualization in files
-                save_metric_to_csv(metric)
-                save_christoffel_to_csv(christoffel)
-                save_metadata(epoch, total_epochs, global_step, total_steps, loss)
-                
-                # Log metrics to W&B
-                wandb_log_data = {
-                    "epoch": epoch,
-                    "step": global_step,
-                    "loss": loss,
-                    "curvature_strength": curvature_str,
-                    "metric_determinant": metric_det,
-                    "min_eigenvalue": min(eigenvalues),
-                    "max_eigenvalue": max(eigenvalues),
-                    "metric_trace": np.trace(metric),
-                }
-                
-                # Add individual metric components to the log
-                for i in range(dim):
-                    for j in range(dim):
-                        wandb_log_data[f"metric_{i}_{j}"] = metric[i, j]
-                
-                # Create a matplotlib figure for the heatmap
-                fig, ax = plt.subplots(figsize=(8, 6))
-                im = ax.imshow(metric, cmap='viridis')
-                ax.set_title(f'Metric Tensor (Epoch {epoch}, Step {step})')
-                plt.colorbar(im)
-                plt.tight_layout()
-                
-                # Log directly to wandb without saving temporary file
-                wandb_log_data["metric_heatmap"] = wandb.Image(plt)
-                
-                # Clean up
-                plt.close(fig)
-                
-                # Log data to W&B
-                wandb.log(wandb_log_data)
-                
-                print(f"Epoch {epoch}/{total_epochs}, Step {global_step}/{total_steps}, Loss: {loss:.4f}")
-                
-                # Wait before next update
-                time.sleep(update_interval)
+    for epoch in range(total_epochs):
+        time.sleep(0.1)  # Slow down to avoid CPU overuse
         
-        # Final update with is_training=False
-        metric = generate_evolving_metric(total_epochs, total_epochs, dim)
-        christoffel = calculate_christoffel(metric)
-        save_metric_to_csv(metric)
-        save_christoffel_to_csv(christoffel)
-        save_metadata(total_epochs, total_epochs, total_steps, total_steps, 0.1, is_training=False)
+        # Create a mock loss value that decreases over time
+        loss = 1.0 * (1.0 - epoch / total_epochs) + 0.1 * np.random.random()
         
-        # Log final summary metrics
-        wandb.run.summary["final_loss"] = 0.1
-        wandb.run.summary["final_metric_determinant"] = np.linalg.det(metric)
-        wandb.run.summary["training_completed"] = True
-        
-        print("Test completed successfully!")
-        
-    except KeyboardInterrupt:
-        print("\nTest interrupted by user")
-        wandb.run.summary["training_completed"] = False
-    except Exception as e:
-        print(f"Error during test: {e}")
-        wandb.run.summary["training_completed"] = False
-    finally:
-        # Close wandb run
-        wandb.finish()
+        # Periodically save metrics data
+        if epoch % 5 == 0:
+            step = int(epoch * (total_steps / total_epochs))
+            
+            # Evolve the metric tensor over time (add a perturbation)
+            perturbation = np.random.normal(0, 0.05, (dim, dim))
+            perturbation = (perturbation + perturbation.T) / 2  # Make it symmetric
+            metric = metric + perturbation
+            
+            # Ensure metric is positive definite by adding to diagonal if needed
+            eigenvalues = np.linalg.eigvalsh(metric)
+            if np.any(eigenvalues <= 0):
+                min_eig = np.min(eigenvalues)
+                if min_eig <= 0:
+                    metric = metric + np.eye(dim) * (abs(min_eig) + 0.1)
+                    
+            # Calculate Christoffel symbols
+            christoffel = calculate_christoffel(metric)
+            
+            # Calculate Riemann tensor 
+            riemann = calculate_riemann_tensor(metric, christoffel, dim)
+            
+            # Save data to files
+            save_metric_to_csv(metric, metric_file)
+            save_christoffel_to_csv(christoffel, christoffel_file)
+            save_riemann_to_csv(riemann, riemann_file)
+            save_metadata(epoch, total_epochs, step, total_steps, loss, True, metadata_file)
+            
+            # Also save to current directory for backward compatibility
+            save_metric_to_csv(metric, metric_file_current)
+            save_christoffel_to_csv(christoffel, christoffel_file_current)
+            save_riemann_to_csv(riemann, riemann_file_current)
+            save_metadata(epoch, total_epochs, step, total_steps, loss, True, metadata_file_current)
+            
+            # Log to W&B
+            wandb.log({
+                "epoch": epoch,
+                "step": step,
+                "loss": loss,
+                "metric_determinant": np.linalg.det(metric),
+                "metric_condition_number": np.linalg.cond(metric)
+            })
+            
+            # Visualize the metric tensor
+            plt.figure(figsize=(8, 6))
+            plt.imshow(metric, cmap='viridis')
+            plt.colorbar(label='Value')
+            plt.title(f'Metric Tensor (Epoch {epoch})')
+            plt.xlabel('j')
+            plt.ylabel('i')
+            plt.tight_layout()
+            
+            # Save the figure and log to W&B
+            plt.savefig(f'metric_epoch_{epoch}.png')
+            wandb.log({"metric_visualization": wandb.Image(f'metric_epoch_{epoch}.png')})
+            plt.close()
+            
+            print(f"Epoch {epoch}/{total_epochs}, Step {step}/{total_steps}, Loss: {loss:.4f}")
+            
+    wandb.finish()
+    print("Test visualization completed.")
+
+def calculate_riemann_tensor(metric, christoffel, dim):
+    """Calculate Riemann tensor from metric and Christoffel symbols"""
+    riemann = np.zeros((dim, dim, dim, dim))
+    
+    # For each component of the Riemann tensor
+    for a in range(dim):
+        for b in range(dim):
+            for c in range(dim):
+                for d in range(dim):
+                    # R^a_bcd = ∂_c Γ^a_bd - ∂_d Γ^a_bc + Γ^a_ce Γ^e_bd - Γ^a_de Γ^e_bc
+                    
+                    # We'll approximate the derivatives (∂_c Γ^a_bd - ∂_d Γ^a_bc) 
+                    # with small values to make it interesting
+                    derivative_term = np.random.normal(0, 0.01)
+                    
+                    # Calculate the Christoffel product terms
+                    product_term = 0
+                    for e in range(dim):
+                        product_term += christoffel[a, c, e] * christoffel[e, b, d]
+                        product_term -= christoffel[a, d, e] * christoffel[e, b, c]
+                    
+                    # Combine terms
+                    riemann[a, b, c, d] = derivative_term + product_term
+    
+    return riemann
 
 if __name__ == "__main__":
     main() 

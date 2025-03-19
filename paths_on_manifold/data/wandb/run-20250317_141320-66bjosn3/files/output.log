@@ -1,8 +1,0 @@
-2025-03-17 14:13:21,158 - path_analysis - INFO - Initialized W&B monitoring: manifold-deep-learning/metric-evolution-20250317-141319
-Starting visualization test with 30 epochs, 8 steps per epoch
-Updates will be sent every 0.2 seconds
-Press Ctrl+C to stop the test
-Saved metric to ./metric_data_current.csv
-Saved Christoffel symbols to ./christoffel_data_current.csv
-Saved metadata to ./metric_metadata.json
-Error during test: '_io.BytesIO' object has no attribute 'ndim'

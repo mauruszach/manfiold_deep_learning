@@ -1,0 +1,15 @@
+{"time":"2025-03-18T01:23:07.057079-07:00","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"/Users/zachmaurus/manifold_deep_learning/wandb/run-20250318_012307-upvakeh1/logs/debug-core.log"}
+{"time":"2025-03-18T01:23:07.280204-07:00","level":"INFO","msg":"created new stream","id":"upvakeh1"}
+{"time":"2025-03-18T01:23:07.280266-07:00","level":"INFO","msg":"stream: started","id":"upvakeh1"}
+{"time":"2025-03-18T01:23:07.280314-07:00","level":"INFO","msg":"handler: started","stream_id":"upvakeh1"}
+{"time":"2025-03-18T01:23:07.280333-07:00","level":"INFO","msg":"sender: started","stream_id":"upvakeh1"}
+{"time":"2025-03-18T01:23:07.280352-07:00","level":"INFO","msg":"writer: Do: started","stream_id":"upvakeh1"}
+{"time":"2025-03-18T01:23:07.598653-07:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-03-18T01:23:12.973573-07:00","level":"INFO","msg":"stream: closing","id":"upvakeh1"}
+{"time":"2025-03-18T01:23:12.973623-07:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-03-18T01:23:12.974249-07:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-03-18T01:23:13.499892-07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-03-18T01:23:13.699641-07:00","level":"INFO","msg":"writer: Close: closed","stream_id":"upvakeh1"}
+{"time":"2025-03-18T01:23:13.699655-07:00","level":"INFO","msg":"handler: closed","stream_id":"upvakeh1"}
+{"time":"2025-03-18T01:23:13.699656-07:00","level":"INFO","msg":"sender: closed","stream_id":"upvakeh1"}
+{"time":"2025-03-18T01:23:13.69976-07:00","level":"INFO","msg":"stream: closed","id":"upvakeh1"}

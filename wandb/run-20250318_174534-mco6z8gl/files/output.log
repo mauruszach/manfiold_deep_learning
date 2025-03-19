@@ -1,0 +1,11 @@
+2025-03-18 17:45:34,967 - src.path_analysis - INFO - Initialized W&B monitoring: manifold-deep-learning/sphere-5d-20250318-174533
+2025-03-18 17:45:35,300 - src.path_analysis - INFO - Dataset visualization saved to ./results/visualizations/dataset.png
+2025-03-18 17:45:35,727 - src.path_analysis - INFO - Initialized RicciFlow with 10 iterations, lr=0.01, device=cpu, is_spacetime=True
+2025-03-18 17:45:38,277 - src.path_analysis - INFO - Epoch 1/50, Batch 0/63, Loss: 1.542912
+2025-03-18 17:45:38,974 - src.path_analysis - INFO - Epoch 1 completed, Average Loss: 0.024491
+2025-03-18 17:45:41,652 - src.path_analysis - INFO - Epoch 2 completed, Average Loss: 0.000000
+2025-03-18 17:45:44,223 - src.path_analysis - INFO - Epoch 3 completed, Average Loss: 0.000000
+2025-03-18 17:45:46,754 - src.path_analysis - INFO - Epoch 4 completed, Average Loss: 0.000000
+2025-03-18 17:45:49,369 - src.path_analysis - INFO - Epoch 5 completed, Average Loss: 0.000000
+2025-03-18 17:45:49,551 - src.path_analysis - INFO - Checkpoint saved to ./results/checkpoints/model_epoch_5_step_1.pt
+2025-03-18 17:45:52,179 - src.path_analysis - INFO - Epoch 6 completed, Average Loss: 0.000000

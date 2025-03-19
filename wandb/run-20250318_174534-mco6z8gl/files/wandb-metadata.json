@@ -1,0 +1,47 @@
+{
+  "os": "macOS-13.5.2-arm64-arm-64bit",
+  "python": "CPython 3.12.0",
+  "startedAt": "2025-03-19T00:45:34.506620Z",
+  "args": [
+    "--analyze"
+  ],
+  "program": "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/main.py",
+  "codePath": "paths_on_manifold/main.py",
+  "git": {
+    "remote": "https://github.com/mauruszach/manfiold_deep_learning.git",
+    "commit": "e1448af2f8861f8983fef6a01754872d36b6c0f1"
+  },
+  "email": "mauruszach@gmail.com",
+  "root": "/Users/zachmaurus/manifold_deep_learning",
+  "host": "Zachs-MacBook-Pro-3.local",
+  "executable": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+  "codePathLocal": "paths_on_manifold/main.py",
+  "cpu_count": 10,
+  "cpu_count_logical": 10,
+  "disk": {
+    "/": {
+      "total": "994662584320",
+      "used": "646260387840"
+    },
+    "/System/Volumes/Data": {
+      "total": "994662584320",
+      "used": "646260387840"
+    }
+  },
+  "memory": {
+    "total": "17179869184"
+  },
+  "cpu": {
+    "count": 10,
+    "countLogical": 10
+  },
+  "apple": {
+    "name": "Apple M1 Pro",
+    "ecpuCores": 2,
+    "pcpuCores": 8,
+    "gpuCores": 16,
+    "memoryGb": 16,
+    "swapTotalBytes": "31138512896",
+    "ramTotalBytes": "17179869184"
+  }
+}

@@ -1,0 +1,7 @@
+{"time":"2025-03-18T17:45:34.509592-07:00","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"/Users/zachmaurus/manifold_deep_learning/wandb/run-20250318_174534-mco6z8gl/logs/debug-core.log"}
+{"time":"2025-03-18T17:45:34.623254-07:00","level":"INFO","msg":"created new stream","id":"mco6z8gl"}
+{"time":"2025-03-18T17:45:34.623308-07:00","level":"INFO","msg":"stream: started","id":"mco6z8gl"}
+{"time":"2025-03-18T17:45:34.623369-07:00","level":"INFO","msg":"handler: started","stream_id":"mco6z8gl"}
+{"time":"2025-03-18T17:45:34.623683-07:00","level":"INFO","msg":"writer: Do: started","stream_id":"mco6z8gl"}
+{"time":"2025-03-18T17:45:34.623697-07:00","level":"INFO","msg":"sender: started","stream_id":"mco6z8gl"}
+{"time":"2025-03-18T17:45:34.823526-07:00","level":"INFO","msg":"Starting system monitor"}

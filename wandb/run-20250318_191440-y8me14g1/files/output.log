@@ -1,0 +1,280 @@
+2025-03-18 19:14:41,064 - src.path_analysis - INFO - Initialized W&B monitoring: manifold-deep-learning/sphere-5d-20250318-191439
+2025-03-18 19:14:41,563 - src.path_analysis - INFO - Dataset visualization saved to ./results/visualizations/dataset.png
+2025-03-18 19:14:42,129 - src.path_analysis - INFO - Initialized RicciFlow with 10 iterations, lr=0.01, device=cpu, is_spacetime=True
+Training progress: Epoch 0/50, Step 0/3150, Loss: 1.45131
+2025-03-18 19:14:46,140 - src.path_analysis - INFO - Epoch 1/50, Batch 0/63, Loss: 1.451312
+Training progress: Epoch 0/50, Step 1/3150, Loss: 1.46765
+Training progress: Epoch 0/50, Step 2/3150, Loss: 1.45346
+Training progress: Epoch 0/50, Step 3/3150, Loss: 1.43287
+Training progress: Epoch 0/50, Step 4/3150, Loss: 1.41592
+Training progress: Epoch 0/50, Step 5/3150, Loss: 1.38721
+Training progress: Epoch 0/50, Step 6/3150, Loss: 1.34624
+Training progress: Epoch 0/50, Step 7/3150, Loss: 1.31669
+Training progress: Epoch 0/50, Step 8/3150, Loss: 1.28710
+Training progress: Epoch 0/50, Step 9/3150, Loss: 1.25546
+Training progress: Epoch 0/50, Step 10/3150, Loss: 1.21113
+2025-03-18 19:14:50,225 - src.path_analysis - INFO - Epoch 1/50, Batch 10/63, Loss: 0.812150
+Training progress: Epoch 0/50, Step 15/3150, Loss: 1.06347
+Training progress: Epoch 0/50, Step 20/3150, Loss: 0.93381
+2025-03-18 19:14:52,015 - src.path_analysis - INFO - Epoch 1/50, Batch 20/63, Loss: 0.768863
+Training progress: Epoch 0/50, Step 25/3150, Loss: 0.83796
+Training progress: Epoch 0/50, Step 30/3150, Loss: 0.75790
+2025-03-18 19:14:52,873 - src.path_analysis - INFO - Epoch 1/50, Batch 30/63, Loss: 0.627740
+Training progress: Epoch 0/50, Step 35/3150, Loss: 0.70489
+Training progress: Epoch 0/50, Step 40/3150, Loss: 0.65366
+2025-03-18 19:14:53,558 - src.path_analysis - INFO - Epoch 1/50, Batch 40/63, Loss: 0.485050
+Training progress: Epoch 0/50, Step 45/3150, Loss: 0.63771
+Training progress: Epoch 0/50, Step 50/3150, Loss: 0.61712
+2025-03-18 19:14:54,230 - src.path_analysis - INFO - Epoch 1/50, Batch 50/63, Loss: 0.522215
+Training progress: Epoch 0/50, Step 55/3150, Loss: 0.59315
+Training progress: Epoch 0/50, Step 60/3150, Loss: 0.56116
+2025-03-18 19:14:54,864 - src.path_analysis - INFO - Epoch 1/50, Batch 60/63, Loss: 0.539828
+2025-03-18 19:14:55,645 - src.path_analysis - INFO - Epoch 1 completed, Average Loss: 0.735787
+2025-03-18 19:14:58,674 - src.path_analysis - INFO - Epoch 2/50, Batch 0/63, Loss: 0.551850
+Training progress: Epoch 1/50, Step 65/3150, Loss: 0.56512
+Training progress: Epoch 1/50, Step 70/3150, Loss: 0.55027
+2025-03-18 19:14:59,655 - src.path_analysis - INFO - Epoch 2/50, Batch 10/63, Loss: 0.455205
+Training progress: Epoch 1/50, Step 75/3150, Loss: 0.52464
+Training progress: Epoch 1/50, Step 80/3150, Loss: 0.54486
+2025-03-18 19:15:00,315 - src.path_analysis - INFO - Epoch 2/50, Batch 20/63, Loss: 0.494167
+Training progress: Epoch 1/50, Step 85/3150, Loss: 0.53320
+Training progress: Epoch 1/50, Step 90/3150, Loss: 0.52070
+2025-03-18 19:15:01,023 - src.path_analysis - INFO - Epoch 2/50, Batch 30/63, Loss: 0.559695
+Training progress: Epoch 1/50, Step 95/3150, Loss: 0.49820
+Training progress: Epoch 1/50, Step 100/3150, Loss: 0.48052
+2025-03-18 19:15:01,697 - src.path_analysis - INFO - Epoch 2/50, Batch 40/63, Loss: 0.440669
+Training progress: Epoch 1/50, Step 105/3150, Loss: 0.45841
+Training progress: Epoch 1/50, Step 110/3150, Loss: 0.46646
+2025-03-18 19:15:02,346 - src.path_analysis - INFO - Epoch 2/50, Batch 50/63, Loss: 0.571657
+Training progress: Epoch 1/50, Step 115/3150, Loss: 0.47073
+Training progress: Epoch 1/50, Step 120/3150, Loss: 0.45830
+2025-03-18 19:15:02,993 - src.path_analysis - INFO - Epoch 2/50, Batch 60/63, Loss: 0.412330
+Training progress: Epoch 1/50, Step 125/3150, Loss: 0.44734
+2025-03-18 19:15:04,025 - src.path_analysis - INFO - Epoch 2 completed, Average Loss: 0.486108
+2025-03-18 19:15:06,665 - src.path_analysis - INFO - Epoch 3/50, Batch 0/63, Loss: 0.471971
+Training progress: Epoch 2/50, Step 130/3150, Loss: 0.43372
+Training progress: Epoch 2/50, Step 135/3150, Loss: 0.44505
+2025-03-18 19:15:07,446 - src.path_analysis - INFO - Epoch 3/50, Batch 10/63, Loss: 0.461812
+Training progress: Epoch 2/50, Step 140/3150, Loss: 0.45736
+Training progress: Epoch 2/50, Step 145/3150, Loss: 0.44609
+2025-03-18 19:15:08,087 - src.path_analysis - INFO - Epoch 3/50, Batch 20/63, Loss: 0.540938
+Training progress: Epoch 2/50, Step 150/3150, Loss: 0.42855
+Training progress: Epoch 2/50, Step 155/3150, Loss: 0.41875
+2025-03-18 19:15:08,823 - src.path_analysis - INFO - Epoch 3/50, Batch 30/63, Loss: 0.476646
+Training progress: Epoch 2/50, Step 160/3150, Loss: 0.42224
+Training progress: Epoch 2/50, Step 165/3150, Loss: 0.41315
+2025-03-18 19:15:09,498 - src.path_analysis - INFO - Epoch 3/50, Batch 40/63, Loss: 0.516811
+Training progress: Epoch 2/50, Step 170/3150, Loss: 0.41180
+Training progress: Epoch 2/50, Step 175/3150, Loss: 0.41540
+2025-03-18 19:15:10,343 - src.path_analysis - INFO - Epoch 3/50, Batch 50/63, Loss: 0.353116
+Training progress: Epoch 2/50, Step 180/3150, Loss: 0.41993
+Training progress: Epoch 2/50, Step 185/3150, Loss: 0.41154
+2025-03-18 19:15:11,336 - src.path_analysis - INFO - Epoch 3/50, Batch 60/63, Loss: 0.303098
+2025-03-18 19:15:11,961 - src.path_analysis - INFO - Epoch 3 completed, Average Loss: 0.429643
+2025-03-18 19:15:14,774 - src.path_analysis - INFO - Epoch 4/50, Batch 0/63, Loss: 0.386387
+Training progress: Epoch 3/50, Step 190/3150, Loss: 0.42958
+Training progress: Epoch 3/50, Step 195/3150, Loss: 0.41279
+2025-03-18 19:15:15,560 - src.path_analysis - INFO - Epoch 4/50, Batch 10/63, Loss: 0.335489
+Training progress: Epoch 3/50, Step 200/3150, Loss: 0.41993
+Training progress: Epoch 3/50, Step 205/3150, Loss: 0.42711
+2025-03-18 19:15:16,223 - src.path_analysis - INFO - Epoch 4/50, Batch 20/63, Loss: 0.407966
+Training progress: Epoch 3/50, Step 210/3150, Loss: 0.41435
+Training progress: Epoch 3/50, Step 215/3150, Loss: 0.40232
+2025-03-18 19:15:16,960 - src.path_analysis - INFO - Epoch 4/50, Batch 30/63, Loss: 0.395464
+Training progress: Epoch 3/50, Step 220/3150, Loss: 0.39194
+Training progress: Epoch 3/50, Step 225/3150, Loss: 0.39852
+2025-03-18 19:15:17,885 - src.path_analysis - INFO - Epoch 4/50, Batch 40/63, Loss: 0.424555
+Training progress: Epoch 3/50, Step 230/3150, Loss: 0.41222
+Training progress: Epoch 3/50, Step 235/3150, Loss: 0.41026
+2025-03-18 19:15:18,738 - src.path_analysis - INFO - Epoch 4/50, Batch 50/63, Loss: 0.318690
+Training progress: Epoch 3/50, Step 240/3150, Loss: 0.37933
+Training progress: Epoch 3/50, Step 245/3150, Loss: 0.36888
+2025-03-18 19:15:19,513 - src.path_analysis - INFO - Epoch 4/50, Batch 60/63, Loss: 0.322602
+Training progress: Epoch 3/50, Step 250/3150, Loss: 0.36454
+2025-03-18 19:15:20,426 - src.path_analysis - INFO - Epoch 4 completed, Average Loss: 0.393048
+2025-03-18 19:15:28,829 - src.path_analysis - INFO - Epoch 5/50, Batch 0/63, Loss: 0.398773
+Training progress: Epoch 4/50, Step 255/3150, Loss: 0.37113
+Training progress: Epoch 4/50, Step 260/3150, Loss: 0.36927
+2025-03-18 19:15:29,782 - src.path_analysis - INFO - Epoch 5/50, Batch 10/63, Loss: 0.336298
+Training progress: Epoch 4/50, Step 265/3150, Loss: 0.35963
+Training progress: Epoch 4/50, Step 270/3150, Loss: 0.37542
+2025-03-18 19:15:30,553 - src.path_analysis - INFO - Epoch 5/50, Batch 20/63, Loss: 0.299386
+Training progress: Epoch 4/50, Step 275/3150, Loss: 0.38354
+Training progress: Epoch 4/50, Step 280/3150, Loss: 0.39261
+2025-03-18 19:15:31,290 - src.path_analysis - INFO - Epoch 5/50, Batch 30/63, Loss: 0.269193
+Training progress: Epoch 4/50, Step 285/3150, Loss: 0.37526
+Training progress: Epoch 4/50, Step 290/3150, Loss: 0.36402
+2025-03-18 19:15:31,959 - src.path_analysis - INFO - Epoch 5/50, Batch 40/63, Loss: 0.281664
+Training progress: Epoch 4/50, Step 295/3150, Loss: 0.32822
+Training progress: Epoch 4/50, Step 300/3150, Loss: 0.35603
+2025-03-18 19:15:32,619 - src.path_analysis - INFO - Epoch 5/50, Batch 50/63, Loss: 0.288299
+Training progress: Epoch 4/50, Step 305/3150, Loss: 0.34457
+Training progress: Epoch 4/50, Step 310/3150, Loss: 0.33788
+2025-03-18 19:15:33,444 - src.path_analysis - INFO - Epoch 5/50, Batch 60/63, Loss: 0.358967
+2025-03-18 19:15:34,144 - src.path_analysis - INFO - Epoch 5 completed, Average Loss: 0.357699
+2025-03-18 19:15:34,356 - src.path_analysis - INFO - Checkpoint saved to ./results/checkpoints/model_epoch_5_step_315.pt
+Training progress: Epoch 5/50, Step 315/3150, Loss: 0.33663
+2025-03-18 19:15:40,014 - src.path_analysis - INFO - Epoch 6/50, Batch 0/63, Loss: 0.360227
+Training progress: Epoch 5/50, Step 320/3150, Loss: 0.33650
+Training progress: Epoch 5/50, Step 325/3150, Loss: 0.34042
+2025-03-18 19:15:41,290 - src.path_analysis - INFO - Epoch 6/50, Batch 10/63, Loss: 0.469323
+Training progress: Epoch 5/50, Step 330/3150, Loss: 0.34144
+Training progress: Epoch 5/50, Step 335/3150, Loss: 0.34511
+2025-03-18 19:15:42,004 - src.path_analysis - INFO - Epoch 6/50, Batch 20/63, Loss: 0.371433
+Training progress: Epoch 5/50, Step 340/3150, Loss: 0.34455
+Training progress: Epoch 5/50, Step 345/3150, Loss: 0.34099
+2025-03-18 19:15:42,642 - src.path_analysis - INFO - Epoch 6/50, Batch 30/63, Loss: 0.333823
+Training progress: Epoch 5/50, Step 350/3150, Loss: 0.34703
+Training progress: Epoch 5/50, Step 355/3150, Loss: 0.35750
+2025-03-18 19:15:43,301 - src.path_analysis - INFO - Epoch 6/50, Batch 40/63, Loss: 0.332214
+Training progress: Epoch 5/50, Step 360/3150, Loss: 0.31998
+Training progress: Epoch 5/50, Step 365/3150, Loss: 0.32851
+2025-03-18 19:15:43,939 - src.path_analysis - INFO - Epoch 6/50, Batch 50/63, Loss: 0.452127
+Training progress: Epoch 5/50, Step 370/3150, Loss: 0.31499
+Training progress: Epoch 5/50, Step 375/3150, Loss: 0.32992
+2025-03-18 19:15:44,571 - src.path_analysis - INFO - Epoch 6/50, Batch 60/63, Loss: 0.332318
+2025-03-18 19:15:45,239 - src.path_analysis - INFO - Epoch 6 completed, Average Loss: 0.336530
+2025-03-18 19:15:47,902 - src.path_analysis - INFO - Epoch 7/50, Batch 0/63, Loss: 0.306687
+Training progress: Epoch 6/50, Step 380/3150, Loss: 0.34909
+Training progress: Epoch 6/50, Step 385/3150, Loss: 0.36830
+2025-03-18 19:15:48,679 - src.path_analysis - INFO - Epoch 7/50, Batch 10/63, Loss: 0.299150
+Training progress: Epoch 6/50, Step 390/3150, Loss: 0.36480
+Training progress: Epoch 6/50, Step 395/3150, Loss: 0.34361
+2025-03-18 19:15:49,515 - src.path_analysis - INFO - Epoch 7/50, Batch 20/63, Loss: 0.517015
+Training progress: Epoch 6/50, Step 400/3150, Loss: 0.35712
+Training progress: Epoch 6/50, Step 405/3150, Loss: 0.36800
+2025-03-18 19:15:50,849 - src.path_analysis - INFO - Epoch 7/50, Batch 30/63, Loss: 0.284405
+Training progress: Epoch 6/50, Step 410/3150, Loss: 0.35968
+Training progress: Epoch 6/50, Step 415/3150, Loss: 0.33673
+2025-03-18 19:15:52,159 - src.path_analysis - INFO - Epoch 7/50, Batch 40/63, Loss: 0.345864
+Training progress: Epoch 6/50, Step 420/3150, Loss: 0.32938
+Training progress: Epoch 6/50, Step 425/3150, Loss: 0.32162
+2025-03-18 19:15:54,513 - src.path_analysis - INFO - Epoch 7/50, Batch 50/63, Loss: 0.318877
+Training progress: Epoch 6/50, Step 430/3150, Loss: 0.32177
+Training progress: Epoch 6/50, Step 435/3150, Loss: 0.31570
+2025-03-18 19:15:55,277 - src.path_analysis - INFO - Epoch 7/50, Batch 60/63, Loss: 0.356243
+Training progress: Epoch 6/50, Step 440/3150, Loss: 0.31888
+2025-03-18 19:15:56,490 - src.path_analysis - INFO - Epoch 7 completed, Average Loss: 0.338686
+2025-03-18 19:15:59,612 - src.path_analysis - INFO - Epoch 8/50, Batch 0/63, Loss: 0.247173
+Training progress: Epoch 7/50, Step 445/3150, Loss: 0.31299
+Training progress: Epoch 7/50, Step 450/3150, Loss: 0.30495
+2025-03-18 19:16:00,399 - src.path_analysis - INFO - Epoch 8/50, Batch 10/63, Loss: 0.360646
+Training progress: Epoch 7/50, Step 455/3150, Loss: 0.30606
+Training progress: Epoch 7/50, Step 460/3150, Loss: 0.30632
+2025-03-18 19:16:01,079 - src.path_analysis - INFO - Epoch 8/50, Batch 20/63, Loss: 0.346598
+Training progress: Epoch 7/50, Step 465/3150, Loss: 0.33726
+Training progress: Epoch 7/50, Step 470/3150, Loss: 0.33795
+2025-03-18 19:16:01,738 - src.path_analysis - INFO - Epoch 8/50, Batch 30/63, Loss: 0.210861
+Training progress: Epoch 7/50, Step 475/3150, Loss: 0.31516
+Training progress: Epoch 7/50, Step 480/3150, Loss: 0.32920
+2025-03-18 19:16:02,386 - src.path_analysis - INFO - Epoch 8/50, Batch 40/63, Loss: 0.399968
+Training progress: Epoch 7/50, Step 485/3150, Loss: 0.31471
+Training progress: Epoch 7/50, Step 490/3150, Loss: 0.32135
+2025-03-18 19:16:03,529 - src.path_analysis - INFO - Epoch 8/50, Batch 50/63, Loss: 0.277119
+Training progress: Epoch 7/50, Step 495/3150, Loss: 0.30447
+Training progress: Epoch 7/50, Step 500/3150, Loss: 0.31673
+2025-03-18 19:16:04,203 - src.path_analysis - INFO - Epoch 8/50, Batch 60/63, Loss: 0.264076
+2025-03-18 19:16:04,853 - src.path_analysis - INFO - Epoch 8 completed, Average Loss: 0.318622
+2025-03-18 19:16:07,689 - src.path_analysis - INFO - Epoch 9/50, Batch 0/63, Loss: 0.282233
+Training progress: Epoch 8/50, Step 505/3150, Loss: 0.34002
+Training progress: Epoch 8/50, Step 510/3150, Loss: 0.32144
+2025-03-18 19:16:08,541 - src.path_analysis - INFO - Epoch 9/50, Batch 10/63, Loss: 0.299535
+Training progress: Epoch 8/50, Step 515/3150, Loss: 0.32302
+Training progress: Epoch 8/50, Step 520/3150, Loss: 0.31249
+2025-03-18 19:16:09,233 - src.path_analysis - INFO - Epoch 9/50, Batch 20/63, Loss: 0.462286
+Training progress: Epoch 8/50, Step 525/3150, Loss: 0.31272
+Training progress: Epoch 8/50, Step 530/3150, Loss: 0.33709
+2025-03-18 19:16:09,903 - src.path_analysis - INFO - Epoch 9/50, Batch 30/63, Loss: 0.339617
+Training progress: Epoch 8/50, Step 535/3150, Loss: 0.33370
+Training progress: Epoch 8/50, Step 540/3150, Loss: 0.33841
+2025-03-18 19:16:10,646 - src.path_analysis - INFO - Epoch 9/50, Batch 40/63, Loss: 0.278180
+Training progress: Epoch 8/50, Step 545/3150, Loss: 0.31962
+Training progress: Epoch 8/50, Step 550/3150, Loss: 0.31406
+2025-03-18 19:16:11,333 - src.path_analysis - INFO - Epoch 9/50, Batch 50/63, Loss: 0.443578
+Training progress: Epoch 8/50, Step 555/3150, Loss: 0.33466
+Training progress: Epoch 8/50, Step 560/3150, Loss: 0.33893
+2025-03-18 19:16:12,004 - src.path_analysis - INFO - Epoch 9/50, Batch 60/63, Loss: 0.267681
+Training progress: Epoch 8/50, Step 565/3150, Loss: 0.33535
+2025-03-18 19:16:13,060 - src.path_analysis - INFO - Epoch 9 completed, Average Loss: 0.329380
+2025-03-18 19:16:15,922 - src.path_analysis - INFO - Epoch 10/50, Batch 0/63, Loss: 0.330974
+Training progress: Epoch 9/50, Step 570/3150, Loss: 0.32660
+Training progress: Epoch 9/50, Step 575/3150, Loss: 0.31363
+2025-03-18 19:16:17,186 - src.path_analysis - INFO - Epoch 10/50, Batch 10/63, Loss: 0.265135
+Training progress: Epoch 9/50, Step 580/3150, Loss: 0.31049
+Training progress: Epoch 9/50, Step 585/3150, Loss: 0.31703
+2025-03-18 19:16:18,469 - src.path_analysis - INFO - Epoch 10/50, Batch 20/63, Loss: 0.499088
+Training progress: Epoch 9/50, Step 590/3150, Loss: 0.31047
+Training progress: Epoch 9/50, Step 595/3150, Loss: 0.32003
+2025-03-18 19:16:19,521 - src.path_analysis - INFO - Epoch 10/50, Batch 30/63, Loss: 0.291289
+Training progress: Epoch 9/50, Step 600/3150, Loss: 0.31086
+Training progress: Epoch 9/50, Step 605/3150, Loss: 0.31063
+2025-03-18 19:16:20,474 - src.path_analysis - INFO - Epoch 10/50, Batch 40/63, Loss: 0.356792
+Training progress: Epoch 9/50, Step 610/3150, Loss: 0.32277
+Training progress: Epoch 9/50, Step 615/3150, Loss: 0.31602
+2025-03-18 19:16:23,854 - src.path_analysis - INFO - Epoch 10/50, Batch 50/63, Loss: 0.217654
+Training progress: Epoch 9/50, Step 620/3150, Loss: 0.29257
+Training progress: Epoch 9/50, Step 625/3150, Loss: 0.31269
+2025-03-18 19:16:27,263 - src.path_analysis - INFO - Epoch 10/50, Batch 60/63, Loss: 0.377027
+2025-03-18 19:16:28,165 - src.path_analysis - INFO - Epoch 10 completed, Average Loss: 0.316901
+2025-03-18 19:16:28,356 - src.path_analysis - INFO - Checkpoint saved to ./results/checkpoints/model_epoch_10_step_630.pt
+2025-03-18 19:16:29,611 - src.path_analysis - INFO - Geodesic visualization saved to ./results/visualizations/geodesics_epoch_10.png
+Error in sys.excepthook:
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/wandb/sdk/lib/exit_hooks.py", line 52, in exc_handler
+    traceback.print_exception(exc_type, exc, tb)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/traceback.py", line 124, in print_exception
+    te = TracebackException(type(value), value, tb, limit=limit, compact=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/traceback.py", line 707, in __init__
+    self.stack = StackSummary._extract_from_extended_frame_gen(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/traceback.py", line 427, in _extract_from_extended_frame_gen
+    linecache.lazycache(filename, f.f_globals)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/linecache.py", line 147, in lazycache
+    def lazycache(filename, module_globals):
+
+KeyboardInterrupt
+
+Original exception was:
+Traceback (most recent call last):
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/main.py", line 303, in <module>
+    main()
+    ^^^^^^
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/main.py", line 290, in main
+    run_path_analysis()
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/main.py", line 98, in run_path_analysis
+    model, ricci_flow = path_analysis_main()
+                        ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/src/path_analysis.py", line 1558, in main
+    model, ricci_flow = train_model_with_visualization(config)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/src/path_analysis.py", line 1215, in train_model_with_visualization
+    for batch_idx, (inputs, labels) in enumerate(dataloader):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 631, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1329, in _next_data
+    idx, data = self._get_data()
+                ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1295, in _get_data
+    success, data = self._try_get_data()
+                    ^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1133, in _try_get_data
+    data = self._data_queue.get(timeout=timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/queues.py", line 113, in get
+    if not self._poll(timeout):
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/connection.py", line 256, in poll
+    return self._poll(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/connection.py", line 423, in _poll
+    r = wait([self], timeout)
+        ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/connection.py", line 1118, in wait
+    ready = selector.select(timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/selectors.py", line 415, in select
+    fd_event_list = self._selector.poll(timeout)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

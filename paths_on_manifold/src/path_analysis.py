@@ -289,7 +289,7 @@ class RicciCurvature:
     def compute_christoffel_symbols(self):
         christoffel = torch.zeros((self.dim, self.dim, self.dim), dtype=torch.float32, device=self.device)
         try:
-        metric_inv = torch.inverse(self.metric)  # Compute the inverse of the metric tensor
+            metric_inv = torch.inverse(self.metric)  # Compute the inverse of the metric tensor
         except torch.linalg.LinAlgError:
             # Add small regularization if metric is not invertible
             regularized_metric = self.metric + torch.eye(self.dim, device=self.device) * 1e-6
@@ -409,20 +409,30 @@ class GeodesicLoss(nn.Module):
 
     def forward(self, outputs, targets, christoffel_symbols=None):
         x0, x1 = outputs, targets
+        
+        # Ensure dimensions match
+        if x0.shape[1] != x1.shape[1]:
+            if x0.shape[1] > x1.shape[1]:
+                # Pad targets with zeros
+                padding = torch.zeros(x1.shape[0], x0.shape[1] - x1.shape[1], device=x1.device)
+                x1 = torch.cat([x1, padding], dim=1)
+            else:
+                # Truncate outputs to match targets
+                x0 = x0[:, :x1.shape[1]]
 
         # If no Christoffel symbols provided, assume flat space (all zeros)
         if christoffel_symbols is None:
             batch_size = outputs.shape[0]
-            dim = outputs.shape[1]
+            dim = x0.shape[1]  # Use matched dimension
             gamma = torch.zeros((batch_size, dim, dim, dim), device=outputs.device)
         else:
             # Convert to tensor if needed
-        if isinstance(christoffel_symbols, sp.MutableDenseMatrix):
+            if isinstance(christoffel_symbols, sp.MutableDenseMatrix):
                 gamma_np = np.array(christoffel_symbols.tolist()).astype(np.float32)
                 gamma = torch.tensor(gamma_np, device=outputs.device)
-        else:
-            gamma = christoffel_symbols
-        
+            else:
+                gamma = christoffel_symbols
+            
             # Ensure gamma has the right shape
             if gamma.dim() == 3:
                 gamma = gamma.unsqueeze(0).repeat(outputs.shape[0], 1, 1, 1)
@@ -532,7 +542,7 @@ class CovariantDescent(Optimizer):
                 if p.grad is None:
                     continue
                 
-                    grad = p.grad.data
+                grad = p.grad.data
                 state = self.state[p]
                 
                 # Apply weight decay
@@ -540,12 +550,12 @@ class CovariantDescent(Optimizer):
                     grad = grad.add(p.data, alpha=weight_decay)
                 
                 # Apply curvature correction if provided
-                    if curvature_func:
+                if curvature_func:
                     try:
                         curvature = curvature_func(p)
                         if curvature.shape[0] == grad.shape[0]:  # Check dimensions match
                             adjusted_grad = grad - torch.matmul(curvature, grad)
-                    else:
+                        else:
                             adjusted_grad = grad  # Fall back to regular gradient if dimensions don't match
                     except Exception as e:
                         logger.warning(f"Error applying curvature correction: {e}")
@@ -727,7 +737,7 @@ class RicciFlow:
             
             # Log Ricci tensor components if available
             try:
-            ricci_tensor = ricci_curvature.compute_ricci_tensor()
+                ricci_tensor = ricci_curvature.compute_ricci_tensor()
                 wandb_log_data['ricci_tensor_norm'] = torch.norm(ricci_tensor).item()
                 
                 # Create a heatmap visualization of the metric and Ricci tensor
@@ -757,8 +767,8 @@ class RicciFlow:
         
         # Backward pass and optimization
         self.optimizer.zero_grad()
-            loss.backward()
-            self.optimizer.step()
+        loss.backward()
+        self.optimizer.step()
 
         return loss.item()
 
@@ -887,12 +897,20 @@ class ManifoldDataset(Dataset):
             z = torch.cos(phi)
             
             # Create embedding data (3D sphere coordinates)
-            self.target_data = torch.stack([x, y, z], dim=1)
+            sphere_coordinates = torch.stack([x, y, z], dim=1)
+            
+            # Extend to embedding_dim if necessary
+            if embedding_dim > 3:
+                # Add extra dimensions with small random values
+                extra_dims = torch.randn(num_samples, embedding_dim - 3) * 0.01
+                self.target_data = torch.cat([sphere_coordinates, extra_dims], dim=1)
+            else:
+                # Use only the first embedding_dim coordinates
+                self.target_data = sphere_coordinates[:, :embedding_dim]
             
             # Create input data by adding noise and increasing dimensionality
-            sphere_data = self.target_data.clone()
             noise = torch.randn(num_samples, input_dim - 3) * 0.1
-            self.input_data = torch.cat([sphere_data, noise], dim=1)
+            self.input_data = torch.cat([sphere_coordinates, noise], dim=1)
             
         elif data_type == 'torus':
             # Generate data on a torus
@@ -907,13 +925,21 @@ class ManifoldDataset(Dataset):
             y = (R + r * torch.cos(phi)) * torch.sin(theta)
             z = r * torch.sin(phi)
             
-            # Create embedding data (3D torus coordinates)
-            self.target_data = torch.stack([x, y, z], dim=1)
+            # Create base torus coordinates
+            torus_coordinates = torch.stack([x, y, z], dim=1)
+            
+            # Extend to embedding_dim if necessary
+            if embedding_dim > 3:
+                # Add extra dimensions with small random values
+                extra_dims = torch.randn(num_samples, embedding_dim - 3) * 0.01
+                self.target_data = torch.cat([torus_coordinates, extra_dims], dim=1)
+            else:
+                # Use only the first embedding_dim coordinates
+                self.target_data = torus_coordinates[:, :embedding_dim]
             
             # Create input data by adding noise and increasing dimensionality
-            torus_data = self.target_data.clone()
             noise = torch.randn(num_samples, input_dim - 3) * 0.1
-            self.input_data = torch.cat([torus_data, noise], dim=1)
+            self.input_data = torch.cat([torus_coordinates, noise], dim=1)
             
         elif data_type == 'swiss_roll':
             # Generate Swiss roll data
@@ -925,13 +951,21 @@ class ManifoldDataset(Dataset):
             y = height
             z = t * torch.sin(t)
             
-            # Create embedding data (3D Swiss roll coordinates)
-            self.target_data = torch.stack([x, y, z], dim=1)
+            # Create basic roll coordinates
+            roll_coordinates = torch.stack([x, y, z], dim=1)
+            
+            # Extend to embedding_dim if necessary
+            if embedding_dim > 3:
+                # Add extra dimensions with small random values
+                extra_dims = torch.randn(num_samples, embedding_dim - 3) * 0.01
+                self.target_data = torch.cat([roll_coordinates, extra_dims], dim=1)
+            else:
+                # Use only the first embedding_dim coordinates
+                self.target_data = roll_coordinates[:, :embedding_dim]
             
             # Create input data by adding noise and increasing dimensionality
-            roll_data = self.target_data.clone()
             noise = torch.randn(num_samples, input_dim - 3) * 0.1
-            self.input_data = torch.cat([roll_data, noise], dim=1)
+            self.input_data = torch.cat([roll_coordinates, noise], dim=1)
         
         else:
             raise ValueError(f"Unknown data type: {data_type}")
@@ -999,7 +1033,7 @@ def visualize_geodesics(model, dataset, num_geodesics=5, num_steps=20, save_path
             
             # Get metric and compute Christoffel symbols
             metric = model.embedding.get_metric().cpu()
-        ricci_curvature = RicciCurvature(metric)
+            ricci_curvature = RicciCurvature(metric)
             christoffel = ricci_curvature.christoffel_symbols
             
             # Compute geodesic path
@@ -1187,14 +1221,15 @@ def train_model_with_visualization(config=None):
             outputs = model(inputs)
             loss = criterion(outputs, labels)
             optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
+            loss.backward()
+            optimizer.step()
             
             # Update running loss
             running_loss = 0.9 * running_loss + 0.1 * loss.item() if global_step > 0 else loss.item()
             
             # Every N steps, send updated metric data to visualization
-            if global_step % config['visualization_interval'] == 0:
+            # Increased frequency for more responsive visualization during interactive learning
+            if global_step % 5 == 0 or global_step < 10:  # More frequent updates, especially at start
                 # Get current metric tensor and related data
                 metric = model.embedding.get_metric().detach().cpu().numpy()
                 
@@ -1237,22 +1272,22 @@ def train_model_with_visualization(config=None):
                     })
                     
                     plt.close(fig)
+            
+            global_step += 1
+            
+            total_loss += loss.item()
+            
+            # Log progress
+            if batch_idx % 10 == 0:
+                logger.info(f"Epoch {epoch+1}/{config['num_epochs']}, Batch {batch_idx}/{len(dataloader)}, "
+                           f"Loss: {loss:.6f}")
                 
-                global_step += 1
-                
-                total_loss += loss.item()
-                
-                # Log progress
-                if batch_idx % 10 == 0:
-                    logger.info(f"Epoch {epoch+1}/{config['num_epochs']}, Batch {batch_idx}/{len(dataloader)}, "
-                               f"Loss: {loss:.6f}")
-                    
-                    # Log batch metrics to W&B
-                    if config['use_wandb'] and wandb.run is not None:
-                        log_metrics_to_wandb({
-                            'batch/loss': loss.item(),
-                            'batch/step': global_step,
-                        })
+                # Log batch metrics to W&B
+                if config['use_wandb'] and wandb.run is not None:
+                    log_metrics_to_wandb({
+                        'batch/loss': loss.item(),
+                        'batch/step': global_step,
+                    })
         
         # Compute average loss for the epoch
         avg_loss = total_loss / len(dataloader)
@@ -1273,7 +1308,16 @@ def train_model_with_visualization(config=None):
         if (epoch + 1) % config['visualization_interval'] == 0:
             # Save metric evolution visualization
             metric_evolution_path = f"{config['save_dir']}/visualizations/metric_evolution_epoch_{epoch+1}.png"
-            ricci_flow.visualize_metric_evolution(save_path=metric_evolution_path)
+            plt.figure(figsize=(10, 8))
+            plt.plot(ricci_flow.metrics_history['scalar_curvature'], label='Scalar Curvature')
+            plt.plot(ricci_flow.metrics_history['metric_determinant'], label='Metric Determinant')
+            plt.title(f'Metric Evolution (Epoch {epoch+1})')
+            plt.xlabel('Training Step')
+            plt.ylabel('Value')
+            plt.legend()
+            plt.tight_layout()
+            plt.savefig(metric_evolution_path)
+            plt.close()
             
             # Visualize geodesics
             geodesics_path = f"{config['save_dir']}/visualizations/geodesics_epoch_{epoch+1}.png"
@@ -1309,13 +1353,31 @@ def train_model_with_visualization(config=None):
     
     # Save final model and metrics
     ricci_flow.save_checkpoint(config['num_epochs'], global_step)
-    ricci_flow.save_metrics_csv(f"{config['save_dir']}/metrics.csv")
+    # Replace save_metrics_csv with direct CSV creation
+    metrics_csv_path = f"{config['save_dir']}/metrics.csv"
+    with open(metrics_csv_path, 'w') as f:
+        f.write("step,loss,scalar_curvature,metric_determinant\n")
+        for i in range(len(ricci_flow.metrics_history['loss'])):
+            f.write(f"{i},"
+                   f"{ricci_flow.metrics_history['loss'][i]},"
+                   f"{ricci_flow.metrics_history['scalar_curvature'][i]},"
+                   f"{ricci_flow.metrics_history['metric_determinant'][i]}\n")
     
     # Save final visualizations
     final_metric_path = f"{config['save_dir']}/visualizations/final_metric_evolution.png"
     final_geodesics_path = f"{config['save_dir']}/visualizations/final_geodesics.png"
     
-    ricci_flow.visualize_metric_evolution(final_metric_path)
+    plt.figure(figsize=(10, 8))
+    plt.plot(ricci_flow.metrics_history['scalar_curvature'], label='Scalar Curvature')
+    plt.plot(ricci_flow.metrics_history['metric_determinant'], label='Metric Determinant')
+    plt.title(f'Metric Evolution (Final)')
+    plt.xlabel('Training Step')
+    plt.ylabel('Value')
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig(final_metric_path)
+    plt.close()
+    
     visualize_geodesics(model, dataset, save_path=final_geodesics_path)
     
     # Log final metrics and visualizations to W&B
@@ -1361,89 +1423,221 @@ class VisualizationCommunicator:
             self.conn, _ = self.socket.accept()
             print("Visualization connected!")
         elif method == 'file':
+            # Primary files needed by the C++ simulation (in current directory)
             self.metric_file_path = './metric_data_current.csv'
             self.christoffel_file_path = './christoffel_data_current.csv'
             self.metadata_file_path = './metric_metadata.json'
             
+            # Backup files in standard locations
+            project_root = os.path.dirname(os.path.dirname(__file__))
+            data_dir = os.path.join(project_root, 'data')
+            self.alt_metric_path = os.path.join(data_dir, 'metric_tensor.csv')
+            self.alt_christoffel_path = os.path.join(data_dir, 'christoffel_symbols.csv')
+            self.alt_metadata_path = os.path.join(data_dir, 'metric_metadata.json')
+            
+            # Also save to project root with standard names (what simulation.cpp expects)
+            self.root_metric_path = os.path.join(project_root, 'metric_tensor.csv')
+            self.root_christoffel_path = os.path.join(project_root, 'christoffel_symbols.csv')
+            self.root_metadata_path = os.path.join(project_root, 'metric_metadata.json')
+            
+            # Create data directory if it doesn't exist
+            os.makedirs(data_dir, exist_ok=True)
+            
+            # Update frequency control
+            self.last_update_time = 0
+            self.update_interval = 0.1  # Reduced interval - check more frequently (was 0.5)
+        
     def send_update(self, data):
         if self.method == 'socket':
-            # Serialize data (could use pickle, JSON, or custom format)
-            serialized = pickle.dumps(data)
-            # Send data size first, then data
-            self.conn.sendall(len(serialized).to_bytes(4, byteorder='big'))
-            self.conn.sendall(serialized)
-        elif self.method == 'file':
+            # Send JSON data over the socket
+            json_data = json.dumps(data)
             try:
-                # Save metric tensor to CSV
-                if 'metric' in data:
-                    np.savetxt(self.metric_file_path, data['metric'], delimiter=',')
+                self.conn.sendall(json_data.encode('utf-8'))
+            except:
+                print("Error sending data to visualization. Connection might be closed.")
+        elif self.method == 'file':
+            # Check if we should update (limiting update frequency)
+            current_time = time.time()
+            if current_time - self.last_update_time < self.update_interval:
+                return
+            
+            self.last_update_time = current_time
+            
+            # Print status of update
+            print(f"Training progress: Epoch {data.get('epoch', 0)}/{data.get('total_epochs', 0)}, "
+                  f"Step {data.get('step', 0)}/{data.get('total_steps', 0)}, "
+                  f"Loss: {data.get('loss', 0):.5f}")
+            
+            # Save to all possible file locations
+            if 'metric' in data:
+                metric = data['metric']
                 
-                # Save Christoffel symbols to CSV if available
-                if 'christoffel' in data:
-                    # For Christoffel symbols (3D tensor), we need to flatten and save with indices
-                    christoffel = data['christoffel']
-                    with open(self.christoffel_file_path, 'w') as f:
-                        dim = christoffel.shape[0]
-                        for i in range(dim):
-                            for j in range(dim):
-                                for k in range(dim):
-                                    value = christoffel[i, j, k]
-                                    if abs(value) > 1e-10:  # Only save non-zero values
-                                        f.write(f"{i},{j},{k},{value}\n")
+                # Save to all locations
+                file_paths = [
+                    self.metric_file_path,        # ./metric_data_current.csv
+                    self.alt_metric_path,         # data/metric_tensor.csv
+                    self.root_metric_path,        # ./metric_tensor.csv
+                    os.path.join(os.path.dirname(self.metric_file_path), 'metric_tensor.csv')  # ./metric_tensor.csv
+                ]
                 
-                # Save metadata (epoch, step, etc.) to a JSON file
-                metadata = {
-                    'epoch': data.get('epoch', 0),
-                    'total_epochs': data.get('total_epochs', 100),
-                    'step': data.get('step', 0),
-                    'total_steps': data.get('total_steps', 0),
-                    'loss': data.get('loss', 0.0),
-                    'is_training': data.get('is_training', True)
-                }
+                for file_path in file_paths:
+                    self._save_metric_to_csv(metric, file_path)
                 
-                with open(self.metadata_file_path, 'w') as f:
+            # Save Christoffel symbols to CSV if available
+            if 'christoffel' in data:
+                christoffel = data['christoffel']
+                
+                # Save to all locations
+                file_paths = [
+                    self.christoffel_file_path,   # ./christoffel_data_current.csv
+                    self.alt_christoffel_path,    # data/christoffel_symbols.csv
+                    self.root_christoffel_path,   # ./christoffel_symbols.csv
+                    os.path.join(os.path.dirname(self.christoffel_file_path), 'christoffel_symbols.csv')  # ./christoffel_symbols.csv
+                ]
+                
+                for file_path in file_paths:
+                    self._save_christoffel_to_csv(christoffel, file_path)
+            
+            # Save metadata if available
+            metadata = {
+                'epoch': data.get('epoch', 0),
+                'total_epochs': data.get('total_epochs', 100),
+                'step': data.get('step', 0),
+                'total_steps': data.get('total_steps', 1000),
+                'loss': data.get('loss', 0.0),
+                'is_training': data.get('is_training', True)
+            }
+            
+            file_paths = [
+                self.metadata_file_path,   # ./metric_metadata.json
+                self.alt_metadata_path,    # data/metric_metadata.json
+                self.root_metadata_path    # ./metric_metadata.json
+            ]
+            
+            for file_path in file_paths:
+                with open(file_path, 'w') as f:
                     json.dump(metadata, f, indent=2)
-                    
-                logger.debug(f"Saved visualization data - Epoch: {metadata['epoch']}, Step: {metadata['step']}")
-                
-            except Exception as e:
-                logger.warning(f"Failed to save visualization data: {e}")
-                # Continue training even if visualization fails
+    
+    def _save_metric_to_csv(self, metric, filename):
+        """Save metric tensor to CSV file"""
+        try:
+            np.savetxt(filename, metric, delimiter=',')
+        except Exception as e:
+            print(f"Error saving metric to {filename}: {e}")
+    
+    def _save_christoffel_to_csv(self, christoffel, filename):
+        """Save Christoffel symbols to CSV file"""
+        try:
+            with open(filename, 'w') as f:
+                dim = christoffel.shape[0]
+                for i in range(dim):
+                    for j in range(dim):
+                        for k in range(dim):
+                            value = christoffel[i, j, k]
+                            if abs(value) > 1e-10:  # Only save non-zero values
+                                f.write(f"{i},{j},{k},{value}\n")
+        except Exception as e:
+            print(f"Error saving Christoffel symbols to {filename}: {e}")
 
-if __name__ == "__main__":
-    import argparse
-    import json
-    
-    parser = argparse.ArgumentParser(description='Train a manifold learning model')
-    parser.add_argument('--config', type=str, default=None, help='Path to configuration JSON file')
-    parser.add_argument('--data_type', type=str, default='sphere', 
-                        choices=['synthetic', 'sphere', 'torus', 'swiss_roll'],
-                        help='Type of data to generate')
-    parser.add_argument('--embedding_dim', type=int, default=5, help='Dimension of the manifold embedding')
-    parser.add_argument('--num_samples', type=int, default=1000, help='Number of samples to generate')
-    parser.add_argument('--batch_size', type=int, default=16, help='Batch size for training')
-    parser.add_argument('--num_epochs', type=int, default=50, help='Number of epochs to train')
-    parser.add_argument('--learning_rate', type=float, default=0.001, help='Learning rate')
-    parser.add_argument('--save_dir', type=str, default='./results', help='Directory to save results')
-    
-    args = parser.parse_args()
-    
-    # Load configuration from file if provided
-    config = None
-    if args.config:
-        with open(args.config, 'r') as f:
-            config = json.load(f)
-    else:
-        # Create config from command line arguments
-        config = {
-            'data_type': args.data_type,
-            'embedding_dim': args.embedding_dim,
-            'num_samples': args.num_samples,
-            'batch_size': args.batch_size,
-            'num_epochs': args.num_epochs,
-            'learning_rate': args.learning_rate,
-            'save_dir': args.save_dir
-        }
+def main():
+    """Entry point for running path analysis from main.py"""
+    # Default configuration
+    config = {
+        'data_type': 'sphere',
+        'embedding_dim': 5,
+        'num_samples': 1000,
+        'batch_size': 16,
+        'num_epochs': 50,
+        'learning_rate': 0.001,
+        'save_dir': './results'
+    }
     
     # Train the model
+    print("Starting manifold learning with path analysis...")
+    print(f"Training on synthetic '{config['data_type']}' data with embedding dimension {config['embedding_dim']}")
     model, ricci_flow = train_model_with_visualization(config)
+    
+    print("Training complete! Saving model data for visualization...")
+    
+    # Save data in the format expected by the C++ simulation
+    metric = model.embedding.get_metric().detach().cpu().numpy()
+    
+    # Calculate Christoffel symbols
+    ricci_curvature = RicciCurvature(model.embedding.get_metric(), device=model.device)
+    christoffel = ricci_curvature.christoffel_symbols.detach().cpu().numpy()
+    riemann = ricci_curvature.riemann_tensor.detach().cpu().numpy()
+    
+    # Save to both the data directory and current directory for compatibility
+    data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
+    os.makedirs(data_dir, exist_ok=True)
+    
+    # Save to data directory
+    np.savetxt(os.path.join(data_dir, 'metric_tensor.csv'), metric, delimiter=',')
+    with open(os.path.join(data_dir, 'christoffel_symbols.csv'), 'w') as f:
+        dim = christoffel.shape[0]
+        for i in range(dim):
+            for j in range(dim):
+                for k in range(dim):
+                    value = christoffel[i, j, k]
+                    if abs(value) > 1e-10:  # Only save non-zero values
+                        f.write(f"{i},{j},{k},{value}\n")
+    
+    with open(os.path.join(data_dir, 'riemann_tensor.csv'), 'w') as f:
+        dim = riemann.shape[0]
+        for i in range(dim):
+            for j in range(dim):
+                for k in range(dim):
+                    for l in range(dim):
+                        value = riemann[i, j, k, l]
+                        if abs(value) > 1e-10:  # Only save non-zero values
+                            f.write(f"{i},{j},{k},{l},{value}\n")
+    
+    # Save metadata
+    with open(os.path.join(data_dir, 'metric_metadata.json'), 'w') as f:
+        json.dump({
+            'epoch': config['num_epochs'],
+            'total_epochs': config['num_epochs'],
+            'step': config['num_epochs'] * 10,  # Approximate step count
+            'total_steps': config['num_epochs'] * 10,
+            'loss': 0.1,  # Placeholder
+            'is_training': False
+        }, f, indent=2)
+    
+    # Also save to current directory for compatibility
+    np.savetxt('metric_tensor.csv', metric, delimiter=',')
+    with open('christoffel_symbols.csv', 'w') as f:
+        dim = christoffel.shape[0]
+        for i in range(dim):
+            for j in range(dim):
+                for k in range(dim):
+                    value = christoffel[i, j, k]
+                    if abs(value) > 1e-10:  # Only save non-zero values
+                        f.write(f"{i},{j},{k},{value}\n")
+    
+    with open('riemann_tensor.csv', 'w') as f:
+        dim = riemann.shape[0]
+        for i in range(dim):
+            for j in range(dim):
+                for k in range(dim):
+                    for l in range(dim):
+                        value = riemann[i, j, k, l]
+                        if abs(value) > 1e-10:  # Only save non-zero values
+                            f.write(f"{i},{j},{k},{l},{value}\n")
+    
+    # Save metadata
+    with open('metric_metadata.json', 'w') as f:
+        json.dump({
+            'epoch': config['num_epochs'],
+            'total_epochs': config['num_epochs'],
+            'step': config['num_epochs'] * 10,
+            'total_steps': config['num_epochs'] * 10,
+            'loss': 0.1,
+            'is_training': False
+        }, f, indent=2)
+    
+    print("Data saved for visualization. You can now run the simulation to see the learned manifold!")
+    
+    return model, ricci_flow
+
+if __name__ == "__main__":
+    main()

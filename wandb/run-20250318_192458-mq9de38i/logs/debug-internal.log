@@ -1,0 +1,15 @@
+{"time":"2025-03-18T19:24:58.78426-07:00","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"/Users/zachmaurus/manifold_deep_learning/wandb/run-20250318_192458-mq9de38i/logs/debug-core.log"}
+{"time":"2025-03-18T19:24:58.898577-07:00","level":"INFO","msg":"created new stream","id":"mq9de38i"}
+{"time":"2025-03-18T19:24:58.898643-07:00","level":"INFO","msg":"stream: started","id":"mq9de38i"}
+{"time":"2025-03-18T19:24:58.898799-07:00","level":"INFO","msg":"writer: Do: started","stream_id":"mq9de38i"}
+{"time":"2025-03-18T19:24:58.898874-07:00","level":"INFO","msg":"handler: started","stream_id":"mq9de38i"}
+{"time":"2025-03-18T19:24:58.898944-07:00","level":"INFO","msg":"sender: started","stream_id":"mq9de38i"}
+{"time":"2025-03-18T19:24:59.331806-07:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-03-18T19:26:12.526392-07:00","level":"INFO","msg":"stream: closing","id":"mq9de38i"}
+{"time":"2025-03-18T19:26:12.526593-07:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-03-18T19:26:12.527955-07:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-03-18T19:26:13.022118-07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-03-18T19:26:13.263091-07:00","level":"INFO","msg":"writer: Close: closed","stream_id":"mq9de38i"}
+{"time":"2025-03-18T19:26:13.263113-07:00","level":"INFO","msg":"sender: closed","stream_id":"mq9de38i"}
+{"time":"2025-03-18T19:26:13.263302-07:00","level":"INFO","msg":"handler: closed","stream_id":"mq9de38i"}
+{"time":"2025-03-18T19:26:13.263327-07:00","level":"INFO","msg":"stream: closed","id":"mq9de38i"}

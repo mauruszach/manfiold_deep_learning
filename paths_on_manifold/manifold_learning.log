@@ -1,0 +1,31 @@
+2025-03-18 17:46:21,340 - src.path_analysis - INFO - Initialized W&B monitoring: manifold-deep-learning/sphere-5d-20250318-174620
+2025-03-18 17:46:21,612 - src.path_analysis - INFO - Dataset visualization saved to ./results/visualizations/dataset.png
+2025-03-18 17:46:22,145 - src.path_analysis - INFO - Initialized RicciFlow with 10 iterations, lr=0.01, device=cpu, is_spacetime=True
+2025-03-18 17:46:26,125 - src.path_analysis - INFO - Epoch 1/50, Batch 0/63, Loss: 1.210195
+2025-03-18 17:46:28,089 - src.path_analysis - INFO - Epoch 1 completed, Average Loss: 0.019209
+2025-03-18 17:46:32,859 - src.path_analysis - INFO - Epoch 2 completed, Average Loss: 0.000000
+2025-03-18 17:46:36,198 - src.path_analysis - INFO - Epoch 3 completed, Average Loss: 0.000000
+2025-03-18 17:46:38,852 - src.path_analysis - INFO - Epoch 4 completed, Average Loss: 0.000000
+2025-03-18 17:46:41,469 - src.path_analysis - INFO - Epoch 5 completed, Average Loss: 0.000000
+2025-03-18 17:46:41,675 - src.path_analysis - INFO - Checkpoint saved to ./results/checkpoints/model_epoch_5_step_1.pt
+2025-03-18 17:46:44,302 - src.path_analysis - INFO - Epoch 6 completed, Average Loss: 0.000000
+2025-03-18 17:46:47,023 - src.path_analysis - INFO - Epoch 7 completed, Average Loss: 0.000000
+2025-03-18 17:46:49,615 - src.path_analysis - INFO - Epoch 8 completed, Average Loss: 0.000000
+2025-03-18 17:46:52,853 - src.path_analysis - INFO - Epoch 9 completed, Average Loss: 0.000000
+2025-03-18 17:46:55,713 - src.path_analysis - INFO - Epoch 10 completed, Average Loss: 0.000000
+2025-03-18 17:46:55,875 - src.path_analysis - INFO - Checkpoint saved to ./results/checkpoints/model_epoch_10_step_1.pt
+2025-03-18 17:46:56,700 - src.path_analysis - INFO - Geodesic visualization saved to ./results/visualizations/geodesics_epoch_10.png
+2025-03-18 17:46:59,370 - src.path_analysis - INFO - Epoch 11 completed, Average Loss: 0.000000
+2025-03-18 17:47:02,051 - src.path_analysis - INFO - Epoch 12 completed, Average Loss: 0.000000
+2025-03-18 17:47:04,713 - src.path_analysis - INFO - Epoch 13 completed, Average Loss: 0.000000
+2025-03-18 17:47:07,623 - src.path_analysis - INFO - Epoch 14 completed, Average Loss: 0.000000
+2025-03-18 17:47:10,401 - src.path_analysis - INFO - Epoch 15 completed, Average Loss: 0.000000
+2025-03-18 17:47:10,566 - src.path_analysis - INFO - Checkpoint saved to ./results/checkpoints/model_epoch_15_step_1.pt
+2025-03-18 17:47:13,082 - src.path_analysis - INFO - Epoch 16 completed, Average Loss: 0.000000
+2025-03-18 17:47:15,658 - src.path_analysis - INFO - Epoch 17 completed, Average Loss: 0.000000
+2025-03-18 17:47:18,740 - src.path_analysis - INFO - Epoch 18 completed, Average Loss: 0.000000
+2025-03-18 17:47:21,366 - src.path_analysis - INFO - Epoch 19 completed, Average Loss: 0.000000
+2025-03-18 17:47:24,630 - src.path_analysis - INFO - Epoch 20 completed, Average Loss: 0.000000
+2025-03-18 17:47:24,822 - src.path_analysis - INFO - Checkpoint saved to ./results/checkpoints/model_epoch_20_step_1.pt
+2025-03-18 17:47:25,704 - src.path_analysis - INFO - Geodesic visualization saved to ./results/visualizations/geodesics_epoch_20.png
+2025-03-18 18:40:41,739 - src.path_analysis - INFO - Initialized W&B monitoring: manifold-deep-learning/sphere-5d-20250318-184039

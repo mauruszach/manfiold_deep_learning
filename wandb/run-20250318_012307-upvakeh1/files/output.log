@@ -1,0 +1,20 @@
+2025-03-18 01:23:07,733 - __main__ - INFO - Initialized W&B monitoring: manifold-deep-learning/sphere-5d-20250318-012305
+2025-03-18 01:23:08,145 - __main__ - INFO - Dataset visualization saved to ./results/visualizations/dataset.png
+2025-03-18 01:23:08,737 - __main__ - INFO - Initialized RicciFlow with 10 iterations, lr=0.01, device=cpu, is_spacetime=True
+Traceback (most recent call last):
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/src/path_analysis.py", line 1449, in <module>
+    model, ricci_flow = train_model_with_visualization(config)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/src/path_analysis.py", line 1188, in train_model_with_visualization
+    loss = criterion(outputs, labels)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1511, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1520, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/src/path_analysis.py", line 432, in forward
+    return torch.mean(torch.norm(x0 - x1, dim=1))
+                                 ~~~^~~~
+RuntimeError: The size of tensor a (5) must match the size of tensor b (3) at non-singleton dimension 1

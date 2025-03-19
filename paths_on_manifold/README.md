@@ -1,124 +1,122 @@
-# Manifold Deep Learning
+# Paths on Manifold
 
-A research project for learning and visualizing curved spacetime manifolds using deep learning techniques.
+A deep learning system for learning manifold structures and visualizing paths in curved spacetime.
 
-## Project Structure
+## Features
 
-```
-paths_on_manifold/
-├── bin/                  # Executables and binaries
-│   └── simulation        # C++ simulation executable
-├── data/                 # Data files and outputs
-│   ├── christoffel_data_current.csv
-│   ├── metric_data_current.csv
-│   ├── metric_metadata.json
-│   └── ...
-├── docs/                 # Documentation
-│   ├── README.md         # Detailed documentation
-│   ├── manifold_learning.pdf
-│   └── ...
-├── models/               # Trained models and model definitions
-├── src/                  # Source code
-│   ├── path_analysis.py  # Core logic for path analysis on manifolds
-│   ├── python_model_exporter.py
-│   ├── run_wandb_monitor.py
-│   ├── simulation.cpp    # C++ simulation code
-│   └── ...
-├── tests/                # Test files and results
-│   ├── run_test.py
-│   ├── test_results/
-│   └── ...
-├── visualization/        # Visualization scripts and tools
-│   ├── blender_script.py
-│   ├── blender_live_monitor.py
-│   ├── run_live_visualization.py
-│   └── test_visualization.py
-├── main.py               # Main entry point
-└── README.md             # This file
-```
+- Train neural networks to learn manifold structures from geodesic paths
+- Visualize learned manifolds in real-time using C++ OpenGL simulation
+- Interactive learning mode with concurrent visualization
+- Export learned metric tensors and Christoffel symbols
+- Compatible with Python and C++ components
 
 ## Installation
 
 ### Prerequisites
 
-- Python 3.8+
-- C++ compiler (for simulation)
-- Blender 3.0+ (for 3D visualization)
-- PyTorch 1.8+
+- Python 3.7+
+- PyTorch 1.10+
+- SFML and OpenGL (for C++ simulation)
+- Blender (optional, for 3D visualization)
 
-### Setup
-
-Clone the repository:
+### Setting up the environment
 
 ```bash
-git clone <repository-url>
-cd paths_on_manifold
-```
+# Create and activate a virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-Install Python dependencies:
-
-```bash
+# Install Python dependencies
 pip install -r requirements.txt
+
+# Install as development package
+pip install -e .
 ```
 
-Compile the simulation (if needed):
+### Building the C++ Simulation
+
+The C++ simulation visualizes the learned manifold in real-time. To build it:
 
 ```bash
-cd src
-g++ -o ../bin/simulation simulation.cpp -std=c++17 -O2
+# Compile using the provided build script
+./build_simulation.sh
+```
+
+On macOS, you may need to install SFML first:
+
+```bash
+brew install sfml
+```
+
+On Linux:
+
+```bash
+# Ubuntu/Debian
+sudo apt-get install libsfml-dev libgl1-mesa-dev
+
+# Fedora/RHEL
+sudo dnf install SFML-devel mesa-libGL-devel
 ```
 
 ## Usage
 
-The project provides a unified command-line interface through `main.py`:
+### Interactive Learning with Real-Time Visualization
+
+The most exciting way to use this project is with interactive learning mode, where you can see the manifold evolve in real-time as the model trains:
 
 ```bash
-# Run test visualization
-python main.py --visualize
+python main.py --interactive
+```
 
-# Run C++ simulation
+This will:
+1. Start the C++ simulation window
+2. Begin training the manifold model in the background
+3. Update the visualization in real-time as the metric tensor evolves
+
+### Other Usage Options
+
+```bash
+# Run path analysis (train the manifold model) without visualization
+python main.py --analyze
+
+# Run only the simulation to visualize previously trained models
 python main.py --simulate
+
+# Run the simulation in the background
+python main.py --simulate --background
+
+# Run multiple instances of the simulation
+python main.py --simulate --parallel 4
 
 # Run Blender visualization
 python main.py --blender
-
-# Run tests
-python main.py --test
-
-# Run path analysis
-python main.py --analyze
 ```
 
-## Key Components
+## Controls for the C++ Simulation
 
-### Manifold Learning
+- **Left-click + drag**: Rotate the view
+- **Right-click**: Add a mass at the cursor location
+- **Mouse wheel**: Zoom in/out
+- **C key**: Clear additional masses
+- **R key**: Add random masses
+- **P key**: Add a random particle
+- **M key**: Toggle between model-based and traditional simulation
+- **L key**: Reload the Python model data
+- **T key**: Toggle timeline view
+- **Left/Right arrows**: Navigate timeline
 
-The core of the project is a deep learning approach to learning the structure of manifolds, particularly those representing curved spacetime in general relativity. The model learns to predict:
+## Project Structure
 
-- Metric tensors
-- Christoffel symbols
-- Geodesic paths
+- `src/`: Core Python code for manifold learning
+- `bin/`: Compiled executables
+- `data/`: Data files and model outputs
+- `visualization/`: Visualization tools and scripts
+- `tests/`: Test scripts and examples
 
-### Visualization
+## Development
 
-Multiple visualization methods are provided:
-
-1. **C++ Real-time Simulation**: Interactive visualization of particles moving on the manifold
-2. **Blender Visualization**: High-quality rendering of the manifold and geodesics
-3. **Test Visualization**: Simple visualization for testing and debugging
-
-### Data Generation and Analysis
-
-The project includes tools for:
-
-- Generating synthetic manifold data
-- Analyzing paths on manifolds
-- Computing geometric quantities (Riemann tensor, Ricci curvature, etc.)
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+MIT 

@@ -1,0 +1,162 @@
+2025-03-18 19:09:03,649 - src.path_analysis - INFO - Initialized W&B monitoring: manifold-deep-learning/sphere-5d-20250318-190902
+2025-03-18 19:09:04,123 - src.path_analysis - INFO - Dataset visualization saved to ./results/visualizations/dataset.png
+2025-03-18 19:09:04,733 - src.path_analysis - INFO - Initialized RicciFlow with 10 iterations, lr=0.01, device=cpu, is_spacetime=True
+2025-03-18 19:09:09,640 - src.path_analysis - INFO - Epoch 1/50, Batch 0/63, Loss: 1.204078
+2025-03-18 19:09:12,475 - src.path_analysis - INFO - Epoch 1/50, Batch 10/63, Loss: 0.840444
+2025-03-18 19:09:13,015 - src.path_analysis - INFO - Epoch 1/50, Batch 20/63, Loss: 0.679609
+2025-03-18 19:09:13,560 - src.path_analysis - INFO - Epoch 1/50, Batch 30/63, Loss: 0.702537
+2025-03-18 19:09:14,124 - src.path_analysis - INFO - Epoch 1/50, Batch 40/63, Loss: 0.556536
+2025-03-18 19:09:14,668 - src.path_analysis - INFO - Epoch 1/50, Batch 50/63, Loss: 0.574431
+2025-03-18 19:09:15,217 - src.path_analysis - INFO - Epoch 1/50, Batch 60/63, Loss: 0.529029
+2025-03-18 19:09:15,807 - src.path_analysis - INFO - Epoch 1 completed, Average Loss: 0.703184
+2025-03-18 19:09:18,540 - src.path_analysis - INFO - Epoch 2/50, Batch 0/63, Loss: 0.502002
+2025-03-18 19:09:19,342 - src.path_analysis - INFO - Epoch 2/50, Batch 10/63, Loss: 0.600502
+2025-03-18 19:09:19,915 - src.path_analysis - INFO - Epoch 2/50, Batch 20/63, Loss: 0.546853
+2025-03-18 19:09:20,492 - src.path_analysis - INFO - Epoch 2/50, Batch 30/63, Loss: 0.453711
+2025-03-18 19:09:21,841 - src.path_analysis - INFO - Epoch 2/50, Batch 40/63, Loss: 0.480362
+2025-03-18 19:09:23,717 - src.path_analysis - INFO - Epoch 2/50, Batch 50/63, Loss: 0.453647
+2025-03-18 19:09:25,777 - src.path_analysis - INFO - Epoch 2/50, Batch 60/63, Loss: 0.621768
+2025-03-18 19:09:26,883 - src.path_analysis - INFO - Epoch 2 completed, Average Loss: 0.504082
+2025-03-18 19:09:29,686 - src.path_analysis - INFO - Epoch 3/50, Batch 0/63, Loss: 0.389649
+2025-03-18 19:09:30,378 - src.path_analysis - INFO - Epoch 3/50, Batch 10/63, Loss: 0.452213
+2025-03-18 19:09:31,178 - src.path_analysis - INFO - Epoch 3/50, Batch 20/63, Loss: 0.444035
+2025-03-18 19:09:31,737 - src.path_analysis - INFO - Epoch 3/50, Batch 30/63, Loss: 0.375125
+2025-03-18 19:09:32,322 - src.path_analysis - INFO - Epoch 3/50, Batch 40/63, Loss: 0.571781
+2025-03-18 19:09:32,920 - src.path_analysis - INFO - Epoch 3/50, Batch 50/63, Loss: 0.374958
+2025-03-18 19:09:33,651 - src.path_analysis - INFO - Epoch 3/50, Batch 60/63, Loss: 0.505013
+2025-03-18 19:09:34,310 - src.path_analysis - INFO - Epoch 3 completed, Average Loss: 0.434328
+2025-03-18 19:09:37,595 - src.path_analysis - INFO - Epoch 4/50, Batch 0/63, Loss: 0.437606
+2025-03-18 19:09:38,385 - src.path_analysis - INFO - Epoch 4/50, Batch 10/63, Loss: 0.488533
+2025-03-18 19:09:40,118 - src.path_analysis - INFO - Epoch 4/50, Batch 20/63, Loss: 0.379611
+2025-03-18 19:09:40,868 - src.path_analysis - INFO - Epoch 4/50, Batch 30/63, Loss: 0.368496
+2025-03-18 19:09:42,033 - src.path_analysis - INFO - Epoch 4/50, Batch 40/63, Loss: 0.463580
+2025-03-18 19:09:42,606 - src.path_analysis - INFO - Epoch 4/50, Batch 50/63, Loss: 0.492141
+2025-03-18 19:09:43,197 - src.path_analysis - INFO - Epoch 4/50, Batch 60/63, Loss: 0.364139
+2025-03-18 19:09:44,099 - src.path_analysis - INFO - Epoch 4 completed, Average Loss: 0.391172
+2025-03-18 19:09:46,601 - src.path_analysis - INFO - Epoch 5/50, Batch 0/63, Loss: 0.366471
+2025-03-18 19:09:47,297 - src.path_analysis - INFO - Epoch 5/50, Batch 10/63, Loss: 0.310799
+2025-03-18 19:09:47,828 - src.path_analysis - INFO - Epoch 5/50, Batch 20/63, Loss: 0.260569
+2025-03-18 19:09:48,377 - src.path_analysis - INFO - Epoch 5/50, Batch 30/63, Loss: 0.282483
+2025-03-18 19:09:49,048 - src.path_analysis - INFO - Epoch 5/50, Batch 40/63, Loss: 0.266428
+2025-03-18 19:09:49,708 - src.path_analysis - INFO - Epoch 5/50, Batch 50/63, Loss: 0.346227
+2025-03-18 19:09:50,374 - src.path_analysis - INFO - Epoch 5/50, Batch 60/63, Loss: 0.389658
+2025-03-18 19:09:50,916 - src.path_analysis - INFO - Epoch 5 completed, Average Loss: 0.336725
+2025-03-18 19:09:51,134 - src.path_analysis - INFO - Checkpoint saved to ./results/checkpoints/model_epoch_5_step_315.pt
+2025-03-18 19:09:53,891 - src.path_analysis - INFO - Epoch 6/50, Batch 0/63, Loss: 0.353282
+2025-03-18 19:09:54,450 - src.path_analysis - INFO - Epoch 6/50, Batch 10/63, Loss: 0.408877
+2025-03-18 19:09:55,002 - src.path_analysis - INFO - Epoch 6/50, Batch 20/63, Loss: 0.329492
+2025-03-18 19:09:55,550 - src.path_analysis - INFO - Epoch 6/50, Batch 30/63, Loss: 0.348889
+2025-03-18 19:09:56,093 - src.path_analysis - INFO - Epoch 6/50, Batch 40/63, Loss: 0.244305
+2025-03-18 19:09:56,634 - src.path_analysis - INFO - Epoch 6/50, Batch 50/63, Loss: 0.342180
+2025-03-18 19:09:57,183 - src.path_analysis - INFO - Epoch 6/50, Batch 60/63, Loss: 0.216800
+2025-03-18 19:09:57,695 - src.path_analysis - INFO - Epoch 6 completed, Average Loss: 0.351762
+2025-03-18 19:09:59,969 - src.path_analysis - INFO - Epoch 7/50, Batch 0/63, Loss: 0.250823
+2025-03-18 19:10:00,654 - src.path_analysis - INFO - Epoch 7/50, Batch 10/63, Loss: 0.388697
+2025-03-18 19:10:01,311 - src.path_analysis - INFO - Epoch 7/50, Batch 20/63, Loss: 0.343508
+2025-03-18 19:10:01,864 - src.path_analysis - INFO - Epoch 7/50, Batch 30/63, Loss: 0.416735
+2025-03-18 19:10:02,402 - src.path_analysis - INFO - Epoch 7/50, Batch 40/63, Loss: 0.223948
+2025-03-18 19:10:02,943 - src.path_analysis - INFO - Epoch 7/50, Batch 50/63, Loss: 0.205168
+2025-03-18 19:10:03,480 - src.path_analysis - INFO - Epoch 7/50, Batch 60/63, Loss: 0.439676
+2025-03-18 19:10:04,244 - src.path_analysis - INFO - Epoch 7 completed, Average Loss: 0.333011
+2025-03-18 19:10:06,546 - src.path_analysis - INFO - Epoch 8/50, Batch 0/63, Loss: 0.321148
+2025-03-18 19:10:07,253 - src.path_analysis - INFO - Epoch 8/50, Batch 10/63, Loss: 0.348833
+2025-03-18 19:10:07,788 - src.path_analysis - INFO - Epoch 8/50, Batch 20/63, Loss: 0.280950
+2025-03-18 19:10:08,407 - src.path_analysis - INFO - Epoch 8/50, Batch 30/63, Loss: 0.384890
+2025-03-18 19:10:09,157 - src.path_analysis - INFO - Epoch 8/50, Batch 40/63, Loss: 0.322258
+2025-03-18 19:10:09,740 - src.path_analysis - INFO - Epoch 8/50, Batch 50/63, Loss: 0.343777
+2025-03-18 19:10:10,370 - src.path_analysis - INFO - Epoch 8/50, Batch 60/63, Loss: 0.356343
+2025-03-18 19:10:10,907 - src.path_analysis - INFO - Epoch 8 completed, Average Loss: 0.320567
+2025-03-18 19:10:13,374 - src.path_analysis - INFO - Epoch 9/50, Batch 0/63, Loss: 0.250859
+2025-03-18 19:10:14,068 - src.path_analysis - INFO - Epoch 9/50, Batch 10/63, Loss: 0.473411
+2025-03-18 19:10:14,614 - src.path_analysis - INFO - Epoch 9/50, Batch 20/63, Loss: 0.303541
+2025-03-18 19:10:15,182 - src.path_analysis - INFO - Epoch 9/50, Batch 30/63, Loss: 0.305132
+2025-03-18 19:10:15,736 - src.path_analysis - INFO - Epoch 9/50, Batch 40/63, Loss: 0.357345
+2025-03-18 19:10:16,308 - src.path_analysis - INFO - Epoch 9/50, Batch 50/63, Loss: 0.227227
+2025-03-18 19:10:17,012 - src.path_analysis - INFO - Epoch 9/50, Batch 60/63, Loss: 0.233422
+2025-03-18 19:10:18,057 - src.path_analysis - INFO - Epoch 9 completed, Average Loss: 0.335414
+2025-03-18 19:10:20,457 - src.path_analysis - INFO - Epoch 10/50, Batch 0/63, Loss: 0.258079
+2025-03-18 19:10:22,386 - src.path_analysis - INFO - Epoch 10/50, Batch 10/63, Loss: 0.267324
+2025-03-18 19:10:23,243 - src.path_analysis - INFO - Epoch 10/50, Batch 20/63, Loss: 0.275800
+2025-03-18 19:10:23,883 - src.path_analysis - INFO - Epoch 10/50, Batch 30/63, Loss: 0.403745
+2025-03-18 19:10:24,595 - src.path_analysis - INFO - Epoch 10/50, Batch 40/63, Loss: 0.385092
+2025-03-18 19:10:25,207 - src.path_analysis - INFO - Epoch 10/50, Batch 50/63, Loss: 0.400902
+2025-03-18 19:10:25,772 - src.path_analysis - INFO - Epoch 10/50, Batch 60/63, Loss: 0.323719
+2025-03-18 19:10:26,394 - src.path_analysis - INFO - Epoch 10 completed, Average Loss: 0.323578
+2025-03-18 19:10:26,601 - src.path_analysis - INFO - Checkpoint saved to ./results/checkpoints/model_epoch_10_step_630.pt
+2025-03-18 19:10:27,669 - src.path_analysis - INFO - Geodesic visualization saved to ./results/visualizations/geodesics_epoch_10.png
+2025-03-18 19:10:31,329 - src.path_analysis - INFO - Epoch 11/50, Batch 0/63, Loss: 0.274702
+2025-03-18 19:10:31,903 - src.path_analysis - INFO - Epoch 11/50, Batch 10/63, Loss: 0.278203
+2025-03-18 19:10:32,651 - src.path_analysis - INFO - Epoch 11/50, Batch 20/63, Loss: 0.383648
+2025-03-18 19:10:33,322 - src.path_analysis - INFO - Epoch 11/50, Batch 30/63, Loss: 0.190189
+2025-03-18 19:10:33,956 - src.path_analysis - INFO - Epoch 11/50, Batch 40/63, Loss: 0.318488
+2025-03-18 19:10:34,792 - src.path_analysis - INFO - Epoch 11/50, Batch 50/63, Loss: 0.228449
+2025-03-18 19:10:35,391 - src.path_analysis - INFO - Epoch 11/50, Batch 60/63, Loss: 0.288371
+2025-03-18 19:10:36,126 - src.path_analysis - INFO - Epoch 11 completed, Average Loss: 0.308767
+2025-03-18 19:10:39,544 - src.path_analysis - INFO - Epoch 12/50, Batch 0/63, Loss: 0.275725
+2025-03-18 19:10:40,558 - src.path_analysis - INFO - Epoch 12/50, Batch 10/63, Loss: 0.246133
+2025-03-18 19:10:41,612 - src.path_analysis - INFO - Epoch 12/50, Batch 20/63, Loss: 0.341638
+Exception ignored in: <function _MultiProcessingDataLoaderIter.__del__ at 0x11eeca2a0>
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1479, in __del__
+    self._shutdown_workers()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1443, in _shutdown_workers
+    w.join(timeout=_utils.MP_STATUS_CHECK_INTERVAL)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/process.py", line 149, in join
+    res = self._popen.wait(timeout)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/popen_fork.py", line 40, in wait
+    if not wait([self.sentinel], timeout):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/multiprocessing/connection.py", line 1118, in wait
+    ready = selector.select(timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/selectors.py", line 415, in select
+    fd_event_list = self._selector.poll(timeout)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt:
+Traceback (most recent call last):
+Error in sys.excepthook:
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/wandb/sdk/lib/exit_hooks.py", line 52, in exc_handler
+    traceback.print_exception(exc_type, exc, tb)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/traceback.py", line 125, in print_exception
+    te.print(file=file, chain=chain)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/traceback.py", line 1019, in print
+    for line in self.format(chain=chain):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/traceback.py", line 956, in format
+    yield from _ctx.emit(exc.stack.format())
+                         ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/traceback.py", line 536, in format
+    formatted_frame = self.format_frame_summary(frame_summary)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/traceback.py", line 491, in format_frame_summary
+    anchors = _extract_caret_anchors_from_line_segment(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/traceback.py", line 586, in _extract_caret_anchors_from_line_segment
+    tree = ast.parse(segment)
+           ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/ast.py", line 34, in parse
+    def parse(source, filename='<unknown>', mode='exec', *,
+
+KeyboardInterrupt
+
+Original exception was:
+Traceback (most recent call last):
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/main.py", line 303, in <module>
+    main()
+    ^^^^^^
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/main.py", line 290, in main
+    run_path_analysis()
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/main.py", line 98, in run_path_analysis
+    model, ricci_flow = path_analysis_main()
+                        ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/src/path_analysis.py", line 1547, in main
+    model, ricci_flow = train_model_with_visualization(config)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zachmaurus/manifold_deep_learning/paths_on_manifold/src/path_analysis.py", line 1224, in train_model_with_visualization
+    loss.backward()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/torch/_tensor.py", line 522, in backward
+    torch.autograd.backward(
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/torch/autograd/__init__.py", line 266, in backward
+    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+KeyboardInterrupt

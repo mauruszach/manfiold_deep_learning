@@ -1,0 +1,180 @@
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 0/100, Step 0/1000, Loss: 1.0404
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 5/100, Step 50/1000, Loss: 1.0337
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 10/100, Step 100/1000, Loss: 0.9428
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 15/100, Step 150/1000, Loss: 0.8531
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 20/100, Step 200/1000, Loss: 0.8203
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 25/100, Step 250/1000, Loss: 0.7661
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 30/100, Step 300/1000, Loss: 0.7107
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 35/100, Step 350/1000, Loss: 0.7227
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 40/100, Step 400/1000, Loss: 0.6926
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 45/100, Step 450/1000, Loss: 0.5825
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 50/100, Step 500/1000, Loss: 0.5894
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 55/100, Step 550/1000, Loss: 0.5098
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 60/100, Step 600/1000, Loss: 0.4678
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 65/100, Step 650/1000, Loss: 0.4100
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 70/100, Step 700/1000, Loss: 0.3092
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 75/100, Step 750/1000, Loss: 0.3349
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 80/100, Step 800/1000, Loss: 0.2661
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 85/100, Step 850/1000, Loss: 0.2220
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 90/100, Step 900/1000, Loss: 0.1631
+Saved metric to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_tensor.csv
+Saved Christoffel symbols to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/christoffel_symbols.csv
+Saved Riemann tensor to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/riemann_tensor.csv
+Saved metadata to /Users/zachmaurus/manifold_deep_learning/paths_on_manifold/data/metric_metadata.json
+Saved metric to metric_data_current.csv
+Saved Christoffel symbols to christoffel_data_current.csv
+Saved Riemann tensor to riemann_tensor.csv
+Saved metadata to metric_metadata.json
+Epoch 95/100, Step 950/1000, Loss: 0.0579
