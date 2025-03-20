@@ -1,8 +1,8 @@
 {
-  "epoch": 10,
-  "total_epochs": 10,
-  "step": 50,
-  "total_steps": 50,
-  "loss": 0.12000000000000002,
+  "epoch": 19,
+  "total_epochs": 20,
+  "step": 19,
+  "total_steps": 20,
+  "loss": 0.01,
   "is_training": true
 }
